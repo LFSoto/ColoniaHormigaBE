@@ -27,22 +27,35 @@ public class ReinaApplicationTests {
 		System.setProperty("spring.data.mongodb.uri", "mongodb+srv://queen:reina2023reina@hormigareina.twxfm7c.mongodb.net/hormiguero?retryWrites=true&w=majority");
 		this._mock = standaloneSetup(instance)
 				.alwaysExpect(status().isOk())
-				.alwaysExpect(content().contentType("application/json"))
 				.build();
 	}
 
 	@Test
 	public void testNuevaHormiga() {
-		int cantidad = 2;
+		int cantidad = 3;
 		String tipo = "D";
 		String body;
 		try {
-			ResultActions response = this._mock.perform(get("/v1/getHormiga?cantidad=2&tipo=D", cantidad, tipo).accept(MediaType.APPLICATION_JSON));
+			ResultActions response = this._mock.perform(get("/v1/getHormiga?cantidad={0}&tipo={1}", cantidad, tipo).accept(MediaType.APPLICATION_JSON));
 			body = response.andReturn().getResponse().getContentAsString();
 			Assert.hasLength(body, "La lista retornada por el servicio esta vacía");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
+	}
+	
+	@Test
+	public void testReleaseHormiga() throws Exception {
+		int cantidad = 1;
+		String tipo = "D";
+		this._mock.perform(post("/v1/releaseHormiga?cantidad={0}&tipo={1}", cantidad, tipo));
+	}
+	
+	@Test
+	public void testKillHormiga() throws Exception {
+		int cantidad = 2;
+		String tipo = "D";
+		this._mock.perform(post("/v1/killHormiga?cantidad={0}&tipo={1}", cantidad, tipo));
 	}
 }

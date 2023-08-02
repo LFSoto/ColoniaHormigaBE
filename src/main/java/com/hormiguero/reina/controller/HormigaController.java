@@ -1,5 +1,6 @@
 package com.hormiguero.reina.controller;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,11 +23,11 @@ public class HormigaController {
     private HormigaRepository repo;
     
 
-    private List<HormigaEntity> addHormigas(int cantidad, String tipo) {
+    private List<HormigaEntity> addHormigas(int cantidad, int ultimoId, String tipo) {
         List<HormigaEntity> hormigas = new ArrayList<>();
         for (int i = 0; i < cantidad; i++) {
             HormigaEntity hormiga = new HormigaEntity();
-            hormiga.setId(i + 1);
+            hormiga.setId(i + 1 + ultimoId);
             hormiga.setType(tipo);
             hormiga.setDateOfBirth(new Date());
             hormigas.add(hormiga);
@@ -52,12 +53,17 @@ public class HormigaController {
     	for (int i = 0; i < all.size() && resultado.size() < cantidad; i++) {
     		HormigaEntity hormiga = all.get(i);
     		
-    		if (hormiga.getType() == null || hormiga.isSameType(tipo) ) {
+    		if (hormiga.getType() == null) {
+    			
+    			hormiga.setDateOfBirth(Date.from(Instant.now()));
+    			hormiga.setType(tipo);
+    			
     			resultado.add(hormiga);
+    			this.repo.save(hormiga);
     		}
     	}
     	if (resultado.size() < cantidad) {
-    		resultado.addAll(addHormigas(cantidad - resultado.size(), tipo));
+    		resultado.addAll(addHormigas(cantidad - resultado.size(), all.size(), tipo));
     	}
     	return resultado;
     }
@@ -69,7 +75,7 @@ public class HormigaController {
      */
     @PostMapping("/v1/releaseHormiga")
     @ApiOperation("Return Hormigas")
-    public void returnHormigas(@RequestParam int cantidad, @RequestParam String tipo) {
+    public void releaseHormigas(@RequestParam int cantidad, @RequestParam String tipo) {
 		List<HormigaEntity> hormigas = repo.findAll();
 		int released = 0;
 		
