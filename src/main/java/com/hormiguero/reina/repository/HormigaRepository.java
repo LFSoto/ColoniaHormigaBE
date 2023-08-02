@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import com.hormiguero.reina.entity.HormigaEntity;
 
-@Repository
 public interface HormigaRepository extends MongoRepository<HormigaEntity, Integer> {
     List<HormigaEntity> findByTypeIsNull();
 

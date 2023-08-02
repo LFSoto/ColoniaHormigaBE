@@ -30,5 +30,7 @@ public class HormigaEntity {
 		this.dateOfBirth = dateOfBirth;
 	}
 
-    
+    public boolean isSameType(String tipo) {
+    	return tipo.matches(this.type);
+    }
 }
