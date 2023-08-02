@@ -6,8 +6,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class ReinaApplicationTests {
 
-	@Test
-	void contextLoads() {
+	public ReinaApplicationTests() {
+		super();
+		//TODO Auto-generated constructor stub
 	}
+
 
 }

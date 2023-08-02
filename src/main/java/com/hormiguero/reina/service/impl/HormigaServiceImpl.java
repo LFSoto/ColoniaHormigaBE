@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.hormiguero.reina.entity.HormigaEntity;
 import com.hormiguero.reina.repository.HormigaRepository;
 import com.hormiguero.reina.service.HormigaService;
 
+@Service
 public class HormigaServiceImpl implements HormigaService {
 
     
