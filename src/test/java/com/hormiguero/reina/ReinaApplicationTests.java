@@ -6,26 +6,28 @@ import org.springframework.test.web.servlet.ResultActions;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.util.Assert;
 import com.hormiguero.reina.controller.HormigaController;
 
 @SpringBootTest
-class ReinaApplicationTests {
+public class ReinaApplicationTests {
 
+	@Autowired
+	public HormigaController instance;
 	private MockMvc _mock;
 	
 	@BeforeEach
 	public void initializeApp() {
 		System.setProperty("spring.data.mongodb.uri", "mongodb+srv://queen:reina2023reina@hormigareina.twxfm7c.mongodb.net/hormiguero?retryWrites=true&w=majority");
-		this._mock = standaloneSetup(new HormigaController())
+		this._mock = standaloneSetup(instance)
 				.alwaysExpect(status().isOk())
-				.alwaysExpect(content().contentType("application/json;charset=UTF-8"))
+				.alwaysExpect(content().contentType("application/json"))
 				.build();
 	}
 
