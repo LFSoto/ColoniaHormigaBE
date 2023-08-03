@@ -63,7 +63,8 @@ public class HormigaController {
     		}
     	}
     	if (resultado.size() < cantidad) {
-    		resultado.addAll(addHormigas(cantidad - resultado.size(), all.size(), tipo));
+    		int indexId = all.size() > 0 ? (all.get(all.size() - 1)).getId() : 1;
+    		resultado.addAll(addHormigas(cantidad - resultado.size(), indexId, tipo));
     	}
     	return resultado;
     }
