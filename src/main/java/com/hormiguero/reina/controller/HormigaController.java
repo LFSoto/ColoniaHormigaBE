@@ -63,7 +63,7 @@ public class HormigaController {
     		}
     	}
     	if (resultado.size() < cantidad) {
-    		int indexId = all.size() > 0 ? (all.get(all.size() - 1)).getId() : 1;
+    		int indexId = all.size() > 0 ? (all.get(all.size() - 1)).getId() : 0;
     		resultado.addAll(addHormigas(cantidad - resultado.size(), indexId, tipo));
     	}
     	return resultado;
@@ -106,6 +106,7 @@ public class HormigaController {
 			HormigaEntity hormiga = hormigas.get(i);
 			if (hormiga.getType() != null && hormiga.isSameType(tipo)) {
 				repo.delete(hormiga);
+				deleted++;
 			}
 		}
     }
