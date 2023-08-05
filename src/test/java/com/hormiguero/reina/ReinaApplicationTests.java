@@ -31,17 +31,14 @@ public class ReinaApplicationTests {
 	}
 
 	@Test
-	public void testNuevaHormiga() {
-		int cantidad = 3;
-		String tipo = "D";
-		String body;
-		try {
-			ResultActions response = this._mock.perform(get("/v1/getHormiga?cantidad={0}&tipo={1}", cantidad, tipo).accept(MediaType.APPLICATION_JSON));
-			body = response.andReturn().getResponse().getContentAsString();
-			Assert.hasLength(body, "La lista retornada por el servicio esta vacía");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public void testNuevaHormiga() throws Exception {
+		int cantidad = 10;
+		String tipo = "TEST";
+		
+		ResultActions response = this._mock.perform(get("/v1/getHormiga?cantidad={0}&tipo={1}", cantidad, tipo).accept(MediaType.APPLICATION_JSON));
+		String body = response.andReturn().getResponse().getContentAsString();
+		Assert.hasLength(body, "La lista retornada por el servicio esta vacía");
+	
 
 	}
 	

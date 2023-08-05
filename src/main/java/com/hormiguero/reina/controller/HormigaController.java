@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hormiguero.reina.entity.HormigaEntity;
 import com.hormiguero.reina.repository.HormigaRepository;
-
 
 @RestController
 public class HormigaController {
@@ -44,7 +42,6 @@ public class HormigaController {
 	 * @return Lista conteniendo las hormigas encontradas
 	 */
     @GetMapping("/v1/getHormiga")
-    @ApiOperation("Get Hormigas")
     public List<HormigaEntity> getHormiga(@RequestParam int cantidad, @RequestParam String tipo) {
     	
     	List<HormigaEntity> resultado = new ArrayList<HormigaEntity>();
@@ -75,7 +72,6 @@ public class HormigaController {
      * @param tipo - Tipo de hormiga a liberar
      */
     @PostMapping("/v1/releaseHormiga")
-    @ApiOperation("Return Hormigas")
     public void releaseHormigas(@RequestParam int cantidad, @RequestParam String tipo) {
 		List<HormigaEntity> hormigas = repo.findAll();
 		int released = 0;
@@ -97,7 +93,6 @@ public class HormigaController {
 	 * @param tipo - Tipo de hormiga a eliminar
 	 */
     @PostMapping("/v1/killHormiga")
-    @ApiOperation("Kill Hormigas")
     public void killHormigas(@RequestParam int cantidad, @RequestParam String tipo) {
 		List<HormigaEntity> hormigas = repo.findAll();
 		int deleted = 0;
