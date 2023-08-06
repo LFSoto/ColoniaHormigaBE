@@ -6,6 +6,17 @@ import java.util.Date;
 
 @Document(collection = "hormigas")
 public class HormigaEntity {
+	
+	public HormigaEntity() {
+		
+	}
+	
+	public HormigaEntity(int id, String type, Date birthday) {
+		this.id = id;
+		this.type = type;
+		this.dateOfBirth = birthday;
+	}
+	
     @Id
     private int id;
     private String type;
