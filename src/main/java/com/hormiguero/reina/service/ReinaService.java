@@ -1,6 +1,7 @@
 package com.hormiguero.reina.service;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class ReinaService implements IReinaService {
             HormigaEntity hormiga = new HormigaEntity();
             hormiga.setId(i + 1 + ultimoId);
             hormiga.setType(tipo);
-            hormiga.setDateOfBirth(new Date());
+            hormiga.setBirthday(new Date());
             hormigas[i] = hormiga;
 
             hormigaRepository.save(hormiga);
@@ -30,28 +31,28 @@ public class ReinaService implements IReinaService {
         return hormigas;
     }
 
-    public HormigaEntity[] getHormigas(int cantidad, String tipo) {
+    public List<HormigaEntity> getHormigas(int cantidad, String tipo) {
     	
-    	HormigaEntity[] resultado = new HormigaEntity[cantidad];
+    	List<HormigaEntity> resultado = new ArrayList<HormigaEntity>();
     	List<HormigaEntity> all = hormigaRepository.findAll();
-    	int added = 0;
     	
-    	for (int i = 0; i < all.size() && resultado.length < cantidad; i++) {
+    	for (int i = 0; i < all.size() && cantidad > 0; i++) {
     		HormigaEntity hormiga = all.get(i);
     		
     		if (hormiga.getType() == null) {
     			
-    			hormiga.setDateOfBirth(Date.from(Instant.now()));
+    			hormiga.setBirthday(Date.from(Instant.now()));
     			hormiga.setType(tipo);
     			
-    			resultado[added++] = hormiga;
+    			resultado.add(hormiga);
     			hormigaRepository.save(hormiga);
+    			cantidad--;
     		}
     	}
-    	if (added < cantidad) {
+    	if (cantidad > 0) {
     		int indexId = all.size() > 0 ? (all.get(all.size() - 1)).getId() : 0;
-    		for (HormigaEntity newHormiga : addHormigas(cantidad - added, indexId, tipo)) {
-    			resultado[added++] = newHormiga;
+    		for (HormigaEntity newHormiga : addHormigas(cantidad, indexId, tipo)) {
+    			resultado.add(newHormiga);
     		}
     	}
     	return resultado;
@@ -69,8 +70,15 @@ public class ReinaService implements IReinaService {
 	
 	public void killHormigas(HormigaEntity[] hormigas) {
 		for (HormigaEntity hormiga : hormigas) {
-			hormigaRepository.delete(hormiga);
+			HormigaEntity existingHormiga = hormigaRepository.findById(hormiga.getId()).orElse(null);
+			if (existingHormiga != null) {
+				hormigaRepository.delete(existingHormiga);
+			}
 		}
+	}
+	
+	public List<HormigaEntity> listAll() {		
+		return hormigaRepository.findAll();
 	}
 
 }

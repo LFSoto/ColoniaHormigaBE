@@ -14,13 +14,13 @@ public class HormigaEntity {
 	public HormigaEntity(int id, String type, Date birthday) {
 		this.id = id;
 		this.type = type;
-		this.dateOfBirth = birthday;
+		this.birthday = birthday;
 	}
 	
     @Id
     private int id;
     private String type;
-    private Date dateOfBirth;
+    private Date birthday;
     
 	public int getId() {
 		return id;
@@ -34,11 +34,11 @@ public class HormigaEntity {
 	public void setType(String type) {
 		this.type = type;
 	}
-	public Date getDateOfBirth() {
-		return dateOfBirth;
+	public Date getBirthday() {
+		return birthday;
 	}
-	public void setDateOfBirth(Date dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
 	}
 
     public boolean isSameType(String tipo) {

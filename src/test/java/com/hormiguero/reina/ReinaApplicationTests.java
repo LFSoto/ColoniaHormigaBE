@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.util.Assert;
 
@@ -41,6 +42,7 @@ public class ReinaApplicationTests {
 	}
 
 	@Test
+	@Order(1)
 	public void testNuevaHormiga() throws Exception {
 		int cantidad = 10;
 		String tipo = "TEST";
@@ -53,18 +55,27 @@ public class ReinaApplicationTests {
 	}
 	
 	@Test
+	@Order(2)
 	public void testReleaseHormiga() throws Exception {
 		this._mock.perform(post("/v1/releaseHormiga").content(this.testHormigas()).header("Content-Type", "application/JSON"));
 	}
 	
 	@Test
+	@Order(3)
 	public void testKillHormiga() throws Exception {
 		this._mock.perform(post("/v1/killHormiga").content(this.testHormigas()).header("Content-Type", "application/JSON"));
 	}
 	
 	@Test
+	@Order(4)
 	public void testConsumeEndpointImplementation()  throws Exception {
 		this._mock.perform(get("/v1/testServiceImplementation"));
+	}
+	
+	@Test
+	@Order(5)
+	public void testListtAll() throws Exception {
+		this._mock.perform(get("/v1/listAll"));
 	}
 	
 	public String testHormigas() throws JsonProcessingException {
