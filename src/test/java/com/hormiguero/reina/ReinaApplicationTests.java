@@ -44,8 +44,8 @@ public class ReinaApplicationTests {
 	@Test
 	@Order(1)
 	public void testNuevaHormiga() throws Exception {
-		int cantidad = 10;
-		String tipo = "TEST";
+		int cantidad = 1;
+		String tipo = "COMPILE_TEST";
 		
 		ResultActions response = this._mock.perform(get("/v1/getHormiga?cantidad={0}&tipo={1}", cantidad, tipo).accept(MediaType.APPLICATION_JSON));
 		String body = response.andReturn().getResponse().getContentAsString();
@@ -81,7 +81,7 @@ public class ReinaApplicationTests {
 	public String testHormigas() throws JsonProcessingException {
 		HormigaEntity[] hormigas = new HormigaEntity[10];
 		for (int id = 0; id < hormigas.length; id++) {
-			hormigas[id] = new HormigaEntity(id + 1, "TEST", new Date());
+			hormigas[id] = new HormigaEntity(id + 1, "COMPILE_TEST", new Date());
 		}
 		return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(hormigas);
 	}
