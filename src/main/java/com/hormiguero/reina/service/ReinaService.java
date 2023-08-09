@@ -13,9 +13,14 @@ import com.hormiguero.reina.repository.HormigaRepository;
 
 @Service
 public class ReinaService implements IReinaService {
+	
+	private final int FREE = 10;
 
     @Autowired
-    private HormigaRepository hormigaRepository;    
+    private HormigaRepository hormigaRepository;
+    
+    @Autowired
+    private ExternalHormigueroService hormigueroEndpoint;
 
     private HormigaEntity[] addHormigas(int cantidad, int ultimoId, String tipo) {
     	HormigaEntity[] hormigas = new HormigaEntity[cantidad];
@@ -29,6 +34,21 @@ public class ReinaService implements IReinaService {
             hormigaRepository.save(hormiga);
         }
         return hormigas;
+    }
+    
+    private void negociateHormigas(int cantidad, String tipo, List<HormigaEntity> all, List<HormigaEntity> reservadas) {
+    	if (all.size() > FREE) {
+        	int costPerAnt = hormigueroEndpoint.getHormigaCost();
+        	int foodAvailable = hormigueroEndpoint.getFoodAvailable();
+        	int cost = cantidad * costPerAnt;
+        	if (cost > foodAvailable) {
+        		
+        	}
+    	}
+		int indexId = all.size() > 0 ? (all.get(all.size() - 1)).getId() : 0;
+		for (HormigaEntity newHormiga : addHormigas(cantidad, indexId, tipo)) {
+			reservadas.add(newHormiga);
+		}
     }
 
     public List<HormigaEntity> getHormigas(int cantidad, String tipo) {
@@ -50,10 +70,7 @@ public class ReinaService implements IReinaService {
     		}
     	}
     	if (cantidad > 0) {
-    		int indexId = all.size() > 0 ? (all.get(all.size() - 1)).getId() : 0;
-    		for (HormigaEntity newHormiga : addHormigas(cantidad, indexId, tipo)) {
-    			resultado.add(newHormiga);
-    		}
+    		negociateHormigas(cantidad, tipo, all, resultado);    		
     	}
     	return resultado;
     }

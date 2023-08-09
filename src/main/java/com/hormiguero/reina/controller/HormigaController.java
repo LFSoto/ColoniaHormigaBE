@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hormiguero.reina.entity.EntornoEntity;
 import com.hormiguero.reina.entity.HormigaEntity;
-import com.hormiguero.reina.service.EntornoService;
+import com.hormiguero.reina.service.ExternalHormigueroService;
 import com.hormiguero.reina.service.ReinaService;
 
 @RestController
@@ -20,9 +21,7 @@ public class HormigaController {
     private ReinaService reina;
 	
 	@Autowired
-	private EntornoService entorno;
-    
-
+	private ExternalHormigueroService endpoint;
 
 	/**
 	 * Consulta y devuelve todas las hormigas encontradas en la base de datos
@@ -53,13 +52,18 @@ public class HormigaController {
 		reina.killHormigas(hormigas);
     }
     
-    @GetMapping("/v1/testServiceImplementation")
-    public String testServiceImplementation() {
-    	return this.entorno.testImplementation();
-    }
-    
     @GetMapping("/v1/listAll")
     public List<HormigaEntity> listAll() {
     	return this.reina.listAll();
+    }
+    
+    @GetMapping("/v1/entorno/foodCost")
+    public int getFoodCost() {
+    	return this.endpoint.getHormigaCost();
+    }
+    
+    @GetMapping("/v1/comida/foodAvailable")
+    public int getFoodAvailable() {
+    	return this.endpoint.getFoodAvailable();
     }
 }

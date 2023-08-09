@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 import java.util.ArrayList;
 import java.util.Date;
 
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -68,17 +69,23 @@ public class ReinaApplicationTests {
 	
 	@Test
 	@Order(4)
-	public void testConsumeEndpointImplementation()  throws Exception {
-		this._mock.perform(get("/v1/testServiceImplementation"));
-	}
-	
-	@Test
-	@Order(5)
 	public void testListtAll() throws Exception {
 		this._mock.perform(get("/v1/listAll"));
 	}
 	
-	public String testHormigas() throws JsonProcessingException {
+	@Test
+	@Order(5)
+	public void testFoodCost()  throws Exception {
+		this._mock.perform(get("/v1/entorno/foodCost"));
+	}
+	
+	@Test
+	@Order(6)
+	public void testFoodAvailable()  throws Exception {
+		assertNotEquals(-1, this._mock.perform(get("/v1/comida/foodAvailable")));
+	}
+	
+	private String testHormigas() throws JsonProcessingException {
 		HormigaEntity[] hormigas = new HormigaEntity[10];
 		for (int id = 0; id < hormigas.length; id++) {
 			hormigas[id] = new HormigaEntity(id + 1, "COMPILE_TEST", new Date());
