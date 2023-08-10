@@ -11,12 +11,6 @@ public class HormigaEntity {
 		
 	}
 	
-	public HormigaEntity(int id, String type, Date birthday) {
-		this.id = id;
-		this.type = type;
-		this.birthday = birthday;
-	}
-	
     @Id
     private int id;
     private String type;
@@ -40,8 +34,4 @@ public class HormigaEntity {
 	public void setBirthday(Date birthday) {
 		this.birthday = birthday;
 	}
-
-    public boolean isSameType(String tipo) {
-    	return tipo.matches(this.type);
-    }
 }

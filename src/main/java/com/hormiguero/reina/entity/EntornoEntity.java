@@ -10,11 +10,6 @@ public class EntornoEntity {
 		setAntCost(0);
 	}
 	
-	public EntornoEntity(String id, int antCost) {
-		setId(id);
-		setAntCost(antCost);
-	}
-	
 	public void setId(String id) {
 		this.id = id;
 	}

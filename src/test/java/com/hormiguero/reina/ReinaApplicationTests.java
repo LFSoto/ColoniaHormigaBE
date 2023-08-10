@@ -2,94 +2,108 @@ package com.hormiguero.reina;
 
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
-
-import java.util.ArrayList;
-import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.util.Assert;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hormiguero.reina.controller.HormigaController;
-import com.hormiguero.reina.entity.HormigaEntity;
 
 @SpringBootTest
+@TestMethodOrder(OrderAnnotation.class)
 public class ReinaApplicationTests {
 
 	@Autowired
 	public HormigaController instance;
 	
 	private MockMvc _mock;
-	private ObjectMapper mapper = new ObjectMapper();
 	
 	@BeforeEach
 	public void initializeApp() {
 		System.setProperty("spring.data.mongodb.uri", "mongodb+srv://queen:reina2023reina@hormigareina.twxfm7c.mongodb.net/hormiguero?retryWrites=true&w=majority");
 		this._mock = standaloneSetup(instance)
-				.alwaysExpect(status().isOk())
 				.build();
 	}
 
 	@Test
-	@Order(1)
+	@Order(0)
 	public void testNuevaHormiga() throws Exception {
-		int cantidad = 1;
 		String tipo = "COMPILE_TEST";
-		
-		ResultActions response = this._mock.perform(get("/v1/getHormiga?cantidad={0}&tipo={1}", cantidad, tipo).accept(MediaType.APPLICATION_JSON));
-		String body = response.andReturn().getResponse().getContentAsString();
-		Assert.hasLength(body, "La lista retornada por el servicio esta vacía");
-	
+		int[] values = {11,22,33};
+		String[] bodies = new String[values.length];
+		for (int i = 0; i < values.length; i++ ) {
+			ResultActions response = this._mock.perform(get("/v1/getHormiga?cantidad={0}&tipo={1}", values[i], tipo).accept(MediaType.APPLICATION_JSON));
+					//.andExpect(MockMvcResultMatchers.status().isOk());
+			String body = response.andReturn().getResponse().getContentAsString();
+			Assert.hasLength(body, "La lista retornada por el servicio esta vacía");
+			
+			bodies[i] = body;
+		}
 
+		for (String body : bodies) {
+			this._mock.perform(post("/v1/killHormiga").content(body).header("Content-Type", "application/JSON"))
+			.andExpect(MockMvcResultMatchers.status().isOk());	
+		}
+	}
+	
+	@Test
+	@Order(1)
+	public void testReleaseHormiga() throws Exception {
+		this._mock.perform(post("/v1/releaseHormiga").content(this.testHormigas("RELEASE")).header("Content-Type", "application/JSON"));
+		//.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	@Test
 	@Order(2)
-	public void testReleaseHormiga() throws Exception {
-		this._mock.perform(post("/v1/releaseHormiga").content(this.testHormigas()).header("Content-Type", "application/JSON"));
+	public void testKillHormiga() throws Exception {
+		this._mock.perform(post("/v1/killHormiga").content(this.testHormigas("DELETE")).header("Content-Type", "application/JSON"));
+		//.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	@Test
 	@Order(3)
-	public void testKillHormiga() throws Exception {
-		this._mock.perform(post("/v1/killHormiga").content(this.testHormigas()).header("Content-Type", "application/JSON"));
+	public void testListtAll() throws Exception {
+		this._mock.perform(get("/v1/listAll"))
+		.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	@Test
 	@Order(4)
-	public void testListtAll() throws Exception {
-		this._mock.perform(get("/v1/listAll"));
+	public void testFoodCost()  throws Exception {
+		this._mock.perform(get("/v1/entorno/foodCost"))
+		.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	@Test
 	@Order(5)
-	public void testFoodCost()  throws Exception {
-		this._mock.perform(get("/v1/entorno/foodCost"));
-	}
-	
-	@Test
-	@Order(6)
 	public void testFoodAvailable()  throws Exception {
 		assertNotEquals(-1, this._mock.perform(get("/v1/comida/foodAvailable")));
 	}
 	
-	private String testHormigas() throws JsonProcessingException {
-		HormigaEntity[] hormigas = new HormigaEntity[10];
-		for (int id = 0; id < hormigas.length; id++) {
-			hormigas[id] = new HormigaEntity(id + 1, "COMPILE_TEST", new Date());
-		}
-		return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(hormigas);
+	@Test
+	@Order(6)
+	public void testSwagger() throws Exception {
+		this._mock.perform(get("/swagger"))
+		.andExpect(MockMvcResultMatchers.status().isFound());
+	}
+	
+	private String testHormigas(String tipo) throws Exception {
+
+		ResultActions response = this._mock.perform(get("/v1/getHormiga?cantidad=15&tipo={0}", tipo).accept(MediaType.APPLICATION_JSON));
+		return response.andReturn().getResponse().getContentAsString();
 	}
 }

@@ -1,5 +1,6 @@
 package com.hormiguero.reina.service;
 
+import java.lang.Exception;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,7 +37,7 @@ public class ReinaService implements IReinaService {
         return hormigas;
     }
     
-    private void negociateHormigas(int cantidad, String tipo, List<HormigaEntity> all, List<HormigaEntity> reservadas) {
+    private void negociateHormigas(int cantidad, String tipo, List<HormigaEntity> all, List<HormigaEntity> reservadas) throws Exception {
     	if (all.size() > FREE) {
         	int costPerAnt = hormigueroEndpoint.getHormigaCost();
         	int foodAvailable = hormigueroEndpoint.getFoodAvailable();
@@ -51,7 +52,7 @@ public class ReinaService implements IReinaService {
 		}
     }
 
-    public List<HormigaEntity> getHormigas(int cantidad, String tipo) {
+    public List<HormigaEntity> getHormigas(int cantidad, String tipo) throws Exception {
     	
     	List<HormigaEntity> resultado = new ArrayList<HormigaEntity>();
     	List<HormigaEntity> all = hormigaRepository.findAll();

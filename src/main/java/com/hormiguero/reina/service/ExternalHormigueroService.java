@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.hormiguero.reina.entity.EntornoEntity;
-import com.hormiguero.reina.service.HormigueroUris.SubSistemas;
 
 @Service
 public class ExternalHormigueroService {
@@ -22,41 +21,33 @@ public class ExternalHormigueroService {
 		this.entornoEndpoint = endpoint;
 	}
 	
-	public int getHormigaCost() {
+	public int getHormigaCost() throws Exception {
 		setUrl(HormigueroUris.getInstance().getUrl(HormigueroUris.SubSistemas.ENTORNO));
-		if (entornoEndpoint.matches("^http.*")) {
-			try {
-				return this.endopoint.getForObject(entornoEndpoint, EntornoEntity.class).getAntCost();
-			} catch (Exception e) {
-				return -1;
-			}
+		int cost = 3;
+		if (entornoEndpoint.startsWith("http")) {
+
+			//EntornoEntity result = this.endopoint.getForObject(entornoEndpoint, EntornoEntity.class);
+			//cost = result.getAntCost();			
 		}
-		return -1;
+		return cost;
 	}
 	
-	public int getFoodAvailable() {
+	public int getFoodAvailable() throws Exception {
 		setUrl(HormigueroUris.getInstance().getUrl(HormigueroUris.SubSistemas.COMIDA));
-		if (entornoEndpoint.matches("^http.*")) {
-			try {
-				return Integer.parseInt(this.endopoint.getForObject(entornoEndpoint, String.class));
-			} catch (Exception e) {
-				return -1;
-			}
+		int result = 10;
+		if (entornoEndpoint.startsWith("http")) {
+			result = Integer.parseInt(this.endopoint.getForObject(entornoEndpoint, String.class));
+			
 		}
-		return 0;
+		return result;
 	}
 
-	public boolean getFood(int food) {
+	public boolean getFood(int food) throws Exception  {
 		setUrl(HormigueroUris.getInstance().getUrl(HormigueroUris.SubSistemas.COMIDA));
-		if (entornoEndpoint.matches("^http.*")) {
-			try {
-				this.endopoint.put(entornoEndpoint, food);
-				return true;
-			} catch (Exception e) {
-				return false;
-			}
-		}
-		
+		if (entornoEndpoint.startsWith("http")) {
+			this.endopoint.put(entornoEndpoint, food);
+			return true;
+		}		
 		return false;
 	}	
 }

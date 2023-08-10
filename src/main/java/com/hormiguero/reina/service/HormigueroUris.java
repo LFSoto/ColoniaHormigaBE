@@ -36,16 +36,16 @@ public class HormigueroUris {
 	}
 
 	public String getUrl(SubSistemas sistema) {
+		String value = "";
 		switch(sistema) {
 		
 		case ENTORNO:
-			return _props.getProperty("hormiguero.entorno");
+			value = _props.getProperty("hormiguero.entorno");
 
 		case COMIDA:
-			return _props.getProperty("hormiguero.comida");
-		default:
-			return "";
+			value = _props.getProperty("hormiguero.comida");
 		}
+		return value;
 	}
 
 }
