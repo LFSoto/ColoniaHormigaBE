@@ -4,20 +4,20 @@ pipeline {
         stage('Install dependencies') {
             steps {
                 echo 'Installing dependencies..'
-                echo 'mvn install'
+                sh 'mvn clean install'
 
             }
         } 
         stage('Build') {
             steps {
                 echo 'Building..'
-                echo 'mvn package'
+                sh 'mvn package'
             }
         }
         stage('Test') {
             steps {
                 echo 'Testing..'
-                echo 'mvn test'
+                sh 'mvn test'
             }
         }
         stage('Deploy') {
