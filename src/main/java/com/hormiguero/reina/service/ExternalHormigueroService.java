@@ -1,7 +1,10 @@
 package com.hormiguero.reina.service;
 
+import java.util.Date;
+
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.hormiguero.reina.entity.EntornoEntity;
@@ -11,10 +14,12 @@ public class ExternalHormigueroService {
 
 	private final RestTemplate endopoint;
 	private String entornoEndpoint;
+	private int cacheFood;
 	
 	public ExternalHormigueroService(RestTemplateBuilder builder) {
 		this.endopoint = builder.build();
 		setUrl("");
+		this.cacheFood = 0;
 	}
 	
 	private void setUrl(String endpoint) {
@@ -34,20 +39,26 @@ public class ExternalHormigueroService {
 	
 	public int getFoodAvailable() throws Exception {
 		setUrl(HormigueroUris.getInstance().getUrl(HormigueroUris.SubSistemas.COMIDA));
-		int result = 10;
+		int result = this.cacheFood == 0 ? 10 : this.cacheFood;
 		if (entornoEndpoint.startsWith("http")) {
 			result = Integer.parseInt(this.endopoint.getForObject(entornoEndpoint, String.class));
 			
 		}
+		this.cacheFood = this.cacheFood == 0 ? result : this.cacheFood;
 		return result;
 	}
 
-	public boolean getFood(int food) throws Exception  {
-		setUrl(HormigueroUris.getInstance().getUrl(HormigueroUris.SubSistemas.COMIDA));
+	public void getFood(int food) throws Exception  {
+		if (food <= 0) return;
+		setUrl(HormigueroUris.getInstance().getUrl(HormigueroUris.SubSistemas.COMIDA) + "?food=" + food);
 		if (entornoEndpoint.startsWith("http")) {
-			this.endopoint.put(entornoEndpoint, food);
-			return true;
-		}		
-		return false;
+			try {
+				this.endopoint.put(entornoEndpoint, food);
+			} catch (HttpServerErrorException ex) {
+				System.out.format("{0:yyyy-MM-ddTHH:mm:ss.000} --- ERROR --- COMIDA --- {1}", new Date(), ex.getResponseBodyAsString());
+				return;
+			}
+		}
+		this.cacheFood -= food;
 	}	
 }

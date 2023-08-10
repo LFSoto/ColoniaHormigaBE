@@ -23,33 +23,43 @@ public class ReinaService implements IReinaService {
     @Autowired
     private ExternalHormigueroService hormigueroEndpoint;
 
-    private HormigaEntity[] addHormigas(int cantidad, int ultimoId, String tipo) {
-    	HormigaEntity[] hormigas = new HormigaEntity[cantidad];
-        for (int i = 0; i < cantidad; i++) {
-            HormigaEntity hormiga = new HormigaEntity();
-            hormiga.setId(i + 1 + ultimoId);
-            hormiga.setType(tipo);
-            hormiga.setBirthday(new Date());
-            hormigas[i] = hormiga;
+    private HormigaEntity addHormiga(String tipo) {
+    	
+    	List<HormigaEntity> all = hormigaRepository.findAll();
+		int indexId = all.size() > 0 ? (all.get(all.size() - 1)).getId() : 0;
+		
+    	HormigaEntity hormiga = new HormigaEntity();
+        hormiga.setId(indexId + 1);
+        hormiga.setType(tipo);
+        hormiga.setBirthday(new Date());
 
-            hormigaRepository.save(hormiga);
-        }
-        return hormigas;
+        hormigaRepository.save(hormiga);
+        return hormiga;
     }
     
+    
     private void negociateHormigas(int cantidad, String tipo, List<HormigaEntity> all, List<HormigaEntity> reservadas) throws Exception {
-    	if (all.size() > FREE) {
-        	int costPerAnt = hormigueroEndpoint.getHormigaCost();
+    	
+    	while (all.size() < FREE && cantidad > 0) {
+    		
+    		reservadas.add( addHormiga(tipo) );
+    		cantidad--;
+    		all = hormigaRepository.findAll();
+    	}
+    	
+    	if (cantidad > 0 && all.size() >= FREE) {
         	int foodAvailable = hormigueroEndpoint.getFoodAvailable();
+        	int costPerAnt = hormigueroEndpoint.getHormigaCost();
         	int cost = cantidad * costPerAnt;
-        	if (cost > foodAvailable) {
-        		
+        	if (foodAvailable < cost) {
+        		cantidad = foodAvailable / costPerAnt;
+        	}
+        	while (cantidad > 0) {
+            	this.hormigueroEndpoint.getFood(costPerAnt);
+        		reservadas.add( addHormiga(tipo) );
+        		cantidad--;
         	}
     	}
-		int indexId = all.size() > 0 ? (all.get(all.size() - 1)).getId() : 0;
-		for (HormigaEntity newHormiga : addHormigas(cantidad, indexId, tipo)) {
-			reservadas.add(newHormiga);
-		}
     }
 
     public List<HormigaEntity> getHormigas(int cantidad, String tipo) throws Exception {
