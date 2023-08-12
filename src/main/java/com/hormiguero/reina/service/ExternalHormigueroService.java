@@ -5,6 +5,7 @@ import java.util.Date;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import com.hormiguero.reina.entity.EntornoEntity;
@@ -41,8 +42,11 @@ public class ExternalHormigueroService {
 		setUrl(HormigueroUris.getInstance().getUrl(HormigueroUris.SubSistemas.COMIDA));
 		int result = this.cacheFood == 0 ? 10 : this.cacheFood;
 		if (entornoEndpoint.startsWith("http")) {
-			result = Integer.parseInt(this.endopoint.getForObject(entornoEndpoint, String.class));
-			
+			try {
+				result = Integer.parseInt(this.endopoint.getForObject(entornoEndpoint, String.class));
+			} catch (ResourceAccessException ex) {
+				result = 20;
+			}
 		}
 		this.cacheFood = this.cacheFood == 0 ? result : this.cacheFood;
 		return result;
@@ -57,7 +61,10 @@ public class ExternalHormigueroService {
 			} catch (HttpServerErrorException ex) {
 				System.out.format("{0:yyyy-MM-ddTHH:mm:ss.000} --- ERROR --- COMIDA --- {1}", new Date(), ex.getResponseBodyAsString());
 				return;
+			} catch (ResourceAccessException ex) {
+				System.out.format("{0:yyyy-MM-ddTHH:mm:ss.000} --- WARNING --- COMIDA --- {1}", new Date(), ex.getMessage());
 			}
+			
 		}
 		this.cacheFood -= food;
 	}	
