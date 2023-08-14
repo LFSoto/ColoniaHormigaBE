@@ -1,12 +1,13 @@
 package com.hormiguero.reina.service;
 
+import java.lang.Exception;
 import java.util.List;
 
 import  com.hormiguero.reina.entity.HormigaEntity;
 
 public interface IReinaService {
 
-    public List<HormigaEntity> getHormigas(int cantidad, String tipo);
+    public List<HormigaEntity> getHormigas(int cantidad, String tipo) throws Exception;
 
 	public void releaseHormigas(HormigaEntity[] hormigas);
 
