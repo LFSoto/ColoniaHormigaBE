@@ -1,5 +1,6 @@
 package com.hormiguero.reina.service;
 
+import java.time.Duration;
 import java.util.Date;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -18,6 +19,8 @@ public class ExternalHormigueroService {
 	private int cacheFood;
 	
 	public ExternalHormigueroService(RestTemplateBuilder builder) {
+		builder.setConnectTimeout(Duration.ofSeconds(3));
+		builder.setReadTimeout(Duration.ofSeconds(3));
 		this.endpoint = builder.build();
 		setUrl("");
 		this.cacheFood = 0;
@@ -32,8 +35,8 @@ public class ExternalHormigueroService {
 		int cost = 3;
 		if (entornoEndpoint.startsWith("http")) {
 
-			//EntornoEntity result = this.endopoint.getForObject(entornoEndpoint, EntornoEntity.class);
-			//cost = result.getAntCost();			
+			EntornoEntity result = this.endpoint.getForObject(entornoEndpoint, EntornoEntity.class);
+			cost = result.getAntCost();
 		}
 		return cost;
 	}
@@ -42,11 +45,7 @@ public class ExternalHormigueroService {
 		setUrl(HormigueroUris.getInstance().getUrl(HormigueroUris.SubSistemas.COMIDA));
 		int result = this.cacheFood == 0 ? 10 : this.cacheFood;
 		if (entornoEndpoint.startsWith("http")) {
-			try {
-				result = Integer.parseInt(this.endpoint.getForObject(entornoEndpoint, String.class));
-			} catch (ResourceAccessException ex) {
-				result = 20;
-			}
+			result = Integer.parseInt(this.endpoint.getForObject(entornoEndpoint, String.class));
 		}
 		this.cacheFood = this.cacheFood == 0 ? result : this.cacheFood;
 		return result;

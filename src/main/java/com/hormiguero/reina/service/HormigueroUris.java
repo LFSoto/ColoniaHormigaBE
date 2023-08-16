@@ -41,9 +41,10 @@ public class HormigueroUris {
 		
 		case ENTORNO:
 			value = _props.getProperty("hormiguero.entorno");
-
+			break;
 		case COMIDA:
 			value = _props.getProperty("hormiguero.comida");
+			break;
 		}
 		return value;
 	}

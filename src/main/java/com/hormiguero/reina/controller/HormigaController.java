@@ -1,17 +1,24 @@
 package com.hormiguero.reina.controller;
 
 import java.lang.Exception;
+import java.net.http.*;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.hormiguero.exception.EndpointError;
 import com.hormiguero.reina.entity.HormigaEntity;
 import com.hormiguero.reina.service.ExternalHormigueroService;
 import com.hormiguero.reina.service.ReinaService;
@@ -32,8 +39,8 @@ public class HormigaController {
 	 * @return Lista conteniendo las hormigas encontradas
 	 */
     @GetMapping("/v1/getHormiga")
-    public List<HormigaEntity> getHormiga(@RequestParam int cantidad, @RequestParam String tipo) throws Exception{
-    	return reina.getHormigas(cantidad, tipo);
+    public List<HormigaEntity> getHormiga(@RequestParam int cantidad, @RequestParam String tipo) throws Exception {
+		return reina.getHormigas(cantidad, tipo);
     }
 
     /**
@@ -73,5 +80,11 @@ public class HormigaController {
     public ModelAndView redirectToSwagger(ModelMap model) {
     	
     	return new ModelAndView("redirect:/swagger-ui/index.html", model);
+    }
+    
+    @ExceptionHandler({ Exception.class })
+    public ResponseEntity<EndpointError> handleAll(Exception ex, WebRequest request) {
+        EndpointError apiError = new EndpointError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getLocalizedMessage(), "error occurred");
+        return new ResponseEntity<EndpointError>(apiError, null, apiError.getStatus());
     }
 }
