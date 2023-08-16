@@ -13,12 +13,12 @@ import com.hormiguero.reina.entity.EntornoEntity;
 @Service
 public class ExternalHormigueroService {
 
-	private final RestTemplate endopoint;
+	private final RestTemplate endpoint;
 	private String entornoEndpoint;
 	private int cacheFood;
 	
 	public ExternalHormigueroService(RestTemplateBuilder builder) {
-		this.endopoint = builder.build();
+		this.endpoint = builder.build();
 		setUrl("");
 		this.cacheFood = 0;
 	}
@@ -43,7 +43,7 @@ public class ExternalHormigueroService {
 		int result = this.cacheFood == 0 ? 10 : this.cacheFood;
 		if (entornoEndpoint.startsWith("http")) {
 			try {
-				result = Integer.parseInt(this.endopoint.getForObject(entornoEndpoint, String.class));
+				result = Integer.parseInt(this.endpoint.getForObject(entornoEndpoint, String.class));
 			} catch (ResourceAccessException ex) {
 				result = 20;
 			}
@@ -57,7 +57,7 @@ public class ExternalHormigueroService {
 		setUrl(HormigueroUris.getInstance().getUrl(HormigueroUris.SubSistemas.COMIDA) + "?food=" + food);
 		if (entornoEndpoint.startsWith("http")) {
 			try {
-				this.endopoint.put(entornoEndpoint, food);
+				this.endpoint.put(entornoEndpoint, food);
 			} catch (HttpServerErrorException ex) {
 				System.out.format("{0:yyyy-MM-ddTHH:mm:ss.000} --- ERROR --- COMIDA --- {1}", new Date(), ex.getResponseBodyAsString());
 				return;
