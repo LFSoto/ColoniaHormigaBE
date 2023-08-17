@@ -22,6 +22,8 @@ import org.springframework.http.MediaType;
 import org.springframework.util.Assert;
 
 import com.hormiguero.reina.controller.HormigaController;
+import com.hormiguero.reina.service.HormigueroUris;
+import com.hormiguero.reina.service.HormigueroUris.SubSistemas;
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
@@ -74,9 +76,9 @@ public class ReinaApplicationTests {
 	@Order(5)
 	public void testNuevaHormiga() throws Exception {
 		if ( !this.entornoStatus)
-			throw new Exception("Imposible crear nuevas hormigas cuando el Subsistema de Entorno esta caido");
+			throw new Exception("Imposible crear nuevas hormigas cuando el Subsistema de Entorno esta caido. Endpoint: " + HormigueroUris.getInstance().getUrl(SubSistemas.ENTORNO));
 		if ( !this.comidaStatus)
-			throw new Exception("Imposible crear nuevas hormigas cuando el Subsistema de Comida esta caido");
+			throw new Exception("Imposible crear nuevas hormigas cuando el Subsistema de Comida esta caido. Endpoint: " + HormigueroUris.getInstance().getUrl(SubSistemas.COMIDA));
 		
 		String tipo = "COMPILE_TEST";
 		int[] values = {11,13};
