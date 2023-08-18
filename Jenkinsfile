@@ -1,33 +1,30 @@
 pipeline {
     agent any
+    tools {
+        maven "mvn"
+    }
     environment {
-        PATH="/opt/apache-maven-3.9.4/bin:$PATH"
-    }   
+        PATH = "$PATH:/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation"
+    }
     stages {
-        stage('Install dependencies') {
-            steps {
-                echo 'Installing dependencies..'
-                sh 'mvn clean install'
-
-            }
-        } 
-        stage('Build') {
-            steps {
-                echo 'Building..'
-                sh 'mvn package'
-            }
-        }
         stage('Test') {
             steps {
                 echo 'Testing..'
-                sh 'mvn test'
             }
         }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
-                echo 'mvn deploy'
+        stage('Scan') {
+          steps {
+            withSonarQubeEnv(installationName: 'SonarQube') { 
+                sh "mvn clean compile sonar:sonar -Dsonar.projectKey=SubSistemaReina -Dsonar.projectName='SubSistemaReina'"
             }
+          }
         }
+        stage("Quality Gate") {
+          steps {
+            timeout(time: 2, unit: 'MINUTES') {
+              waitForQualityGate abortPipeline: true
+            }
+          }
+        }       
     }
 }
