@@ -15,6 +15,7 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
  		<maven.compiler.target>1.8</maven.compiler.target>
+		<sonar.host.url>http://ec2-3-20-151-66.us-east-2.compute.amazonaws.com:9000</sonar.host.url>
 	</properties>
 	<dependencies>
 		<dependency>
