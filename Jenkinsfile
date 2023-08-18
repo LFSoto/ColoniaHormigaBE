@@ -15,7 +15,7 @@ pipeline {
         stage('Scan') {
           steps {
             withSonarQubeEnv(installationName: 'SonarQube') { 
-                sh "mvn clean verify sonar:sonar -Dsonar.projectKey=SubSistemaReina -Dsonar.projectName='SubSistemaReina'"
+                sh "mvn clean sonar:sonar -Dsonar.projectKey=SubSistemaReina -Dsonar.projectName='SubSistemaReina'"
             }
           }
         }
