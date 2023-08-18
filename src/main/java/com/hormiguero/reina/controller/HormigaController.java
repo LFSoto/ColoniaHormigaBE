@@ -35,7 +35,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @RestController
 @OpenAPIDefinition(info = @Info(title = "Subsistema Reina", 
 								description = "Subsistema encargado de crear, reubicar y sepultar hormigas.", 
-								version = "v1.0",
+								version = "v1.1",
 								contact = @Contact(name = "Grupo #3 Subsistema Reina | Josue Quirós, Amanda Bermúdez, Diego Cabezas y Luis Felipe Soto ", email = "Josue Alexander Quirós Abarca <jaquirosa@ucenfotec.ac.cr>; Amanda Paulina Bermúdez Méndez <abermudezm@ucenfotec.ac.cr>; Diego Cabezas Durán <dcabezasd@ucenfotec.ac.cr>; Luis Felipe Soto Cruz <lsotocr@ucenfotec.ac.cr>")))
 public class HormigaController {
 
