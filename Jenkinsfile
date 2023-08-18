@@ -12,24 +12,11 @@ pipeline {
                 echo 'Testing..'
             }
         }
-        stage('Scan') {
-          steps {
-            withSonarQubeEnv(installationName: 'SonarQube') { 
-                sh './mvnw clean org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.0.2155:sonar'
+        stage('SonarQube Analysis') {
+            def mvn = tool 'Default Maven';
+            withSonarQubeEnv() {
+              sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=SubSistemaReina -Dsonar.projectName='SubSistemaReina'"
             }
-          }
-        }
-        stage("Quality Gate") {
-          steps {
-            timeout(time: 2, unit: 'MINUTES') {
-              waitForQualityGate abortPipeline: true
-            }
-          }
-        }  
-        stage('SonarQube analisys') {
-            steps {
-                echo 'Deploying....'
-            }
-        }
+        }        
     }
 }
