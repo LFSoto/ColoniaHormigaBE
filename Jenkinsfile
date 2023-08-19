@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    options {
+        disableConcurrentBuilds abortPrevious: true
+    }
     tools {
         maven "mvn"
     }
@@ -9,22 +12,31 @@ pipeline {
     stages {
         stage('Test') {
             steps {
-                echo 'Testing..'
+                echo 'Testing...'
             }
         }
-        stage('Scan') {
+        stage('Sonar Scan') {
           steps {
-            withSonarQubeEnv(installationName: 'SonarQube') { 
-                sh "mvn clean compile sonar:sonar -Dsonar.projectKey=SubSistemaReina -Dsonar.projectName='SubSistemaReina'"
+              echo 'Running Sonar Scanner...'
+              withSonarQubeEnv(installationName: 'SonarQube') { 
+              sh "mvn clean compile sonar:sonar -Dsonar.projectKey=SubSistemaReina -Dsonar.projectName='SubSistemaReina'"
             }
           }
         }
         stage("Quality Gate") {
           steps {
-            timeout(time: 2, unit: 'MINUTES') {
+              echo 'Evaluation Quality Gate...'
+              timeout(time: 2, unit: 'MINUTES') {
               waitForQualityGate abortPipeline: true
             }
           }
-        }       
+        } 
+        stage("Deploy") {
+          steps {
+              echo 'Deploying application...'
+              sh 'mvn spring-boot:run'
+            }
+          }
+        }
     }
 }
