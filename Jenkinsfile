@@ -10,10 +10,15 @@ pipeline {
         PATH = "$PATH:/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation"
     }
     stages {
+        stage('Build') {
+            steps {
+                echo 'Building...'
+                sh 'mvn compile'
+            }
+        }
         stage('Test') {
             steps {
                 echo 'Testing...'
-                sh 'java --version'
             }
         }
         stage('Sonar Scan') {
@@ -26,19 +31,19 @@ pipeline {
         }
         stage("Quality Gate") {
           steps {
-              echo 'Evaluation Quality Gate...'
+              echo 'Quality Gate check...'
               timeout(time: 2, unit: 'MINUTES') {
               waitForQualityGate abortPipeline: true
             }
           }
         } 
-        stage("Create package") {
+        stage("Package executable") {
           steps {
               echo 'Creating java executable file...'
               sh 'mvn package -Dmaven.test.skip'
             }
         }
-        stage("Deploy application") {
+        stage("Deploy") {
           steps {
               echo 'Deploying application...'
               sh 'java -jar ./target/reina-0.0.1-SNAPSHOT.jar'              
