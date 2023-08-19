@@ -46,7 +46,7 @@ pipeline {
         stage("Deploy") {
           steps {
               echo 'Deploying application...'
-              sh 'java -jar ./target/reina-0.0.1-SNAPSHOT.jar'              
+              sh 'mvn spring-boot:run'              
             }
         }
     }
