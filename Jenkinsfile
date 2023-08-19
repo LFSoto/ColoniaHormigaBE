@@ -13,6 +13,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing...'
+                sh 'java --version'
             }
         }
         stage('Sonar Scan') {
@@ -37,11 +38,10 @@ pipeline {
               sh 'mvn package -Dmaven.test.skip'
             }
         }
-        stage("Deploy application) {
+        stage("Deploy application") {
           steps {
               echo 'Deploying application...'
-              sh 'mvn package -Dmaven.test.skip'
-              sh 'java --version'
+              sh 'mvn package -Dmaven.test.skip'              
             }
         }
     }
