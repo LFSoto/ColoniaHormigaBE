@@ -15,6 +15,7 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
  		<maven.compiler.target>1.8</maven.compiler.target>
+		<sonar.host.url>http://ec2-3-20-151-66.us-east-2.compute.amazonaws.com:9000</sonar.host.url>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -58,7 +59,6 @@
 		</dependency>
 		
 	</dependencies>
-<!-- 
 	<build>
 		<plugins>
 			<plugin>
@@ -69,7 +69,22 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<!-- Build an executable JAR -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+					<archive>
+					<manifest>
+						<addClasspath>true</addClasspath>
+						<classpathPrefix>lib/</classpathPrefix>
+						<mainClass>com.mypackage.ReinaApplication</mainClass>
+					</manifest>
+					</archive>
+				</configuration>
+			</plugin>
 		</plugins>
-	</build> -->
+	</build>
 
 </project>
