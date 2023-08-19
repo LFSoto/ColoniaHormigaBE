@@ -31,10 +31,17 @@ pipeline {
             }
           }
         } 
-        stage("Deploy") {
+        stage("Create package") {
+          steps {
+              echo 'Creating java executable file...'
+              sh 'mvn package -Dmaven.test.skip'
+            }
+        }
+        stage("Deploy application) {
           steps {
               echo 'Deploying application...'
-              sh 'mvn spring-boot:run'
+              sh 'mvn package -Dmaven.test.skip'
+              sh 'java --version'
             }
         }
     }
