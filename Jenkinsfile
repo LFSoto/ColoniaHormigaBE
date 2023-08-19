@@ -41,7 +41,7 @@ pipeline {
         stage("Deploy application") {
           steps {
               echo 'Deploying application...'
-              sh 'java -jar ColoniaHormigaBE/target/reina-0.0.1-SNAPSHOT.jar'              
+              sh 'java -jar ./target/reina-0.0.1-SNAPSHOT.jar'              
             }
         }
     }
