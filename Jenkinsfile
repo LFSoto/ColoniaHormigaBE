@@ -36,7 +36,7 @@ pipeline {
               echo 'Deploying application...'
               sh 'mvn spring-boot:run'
             }
-          }
         }
     }
 }
+
