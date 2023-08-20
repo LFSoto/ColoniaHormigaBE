@@ -15,7 +15,7 @@ import com.hormiguero.reina.repository.HormigaRepository;
 @Service
 public class ReinaService implements IReinaService {
 	
-	private static final int freeAnts = 10;
+	private static final int FREE_ANTS = 10;
 
     @Autowired
     private HormigaRepository hormigaRepository;
@@ -40,14 +40,14 @@ public class ReinaService implements IReinaService {
     
     private void negociateHormigas(int cantidad, String tipo, List<HormigaEntity> all, List<HormigaEntity> reservadas) throws Exception {
     	
-    	while (all.size() < freeAnts && cantidad > 0) {
+    	while (all.size() < FREE_ANTS && cantidad > 0) {
     		
     		reservadas.add( addHormiga(tipo) );
     		cantidad--;
     		all = hormigaRepository.findAll();
     	}
     	
-    	if (cantidad > 0 && all.size() >= freeAnts) {
+    	if (cantidad > 0 && all.size() >= FREE_ANTS) {
         	int foodAvailable = hormigueroEndpoint.getFoodAvailable();
         	int costPerAnt = hormigueroEndpoint.getHormigaCost();
         	int cost = cantidad * costPerAnt;
