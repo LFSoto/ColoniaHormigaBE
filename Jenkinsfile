@@ -26,7 +26,7 @@ pipeline {
           steps {
               echo 'Running Sonar Scanner...'
               withSonarQubeEnv(installationName: 'SonarQube') { 
-              sh "mvn clean test -DskipTests sonar:sonar -Dsonar.projectKey=SubSistemaReina -Dsonar.projectName='SubSistemaReina'"
+              sh "mvn clean test sonar:sonar -Dsonar.projectKey=SubSistemaReina -Dsonar.projectName='SubSistemaReina'"
             }
           }
         }
