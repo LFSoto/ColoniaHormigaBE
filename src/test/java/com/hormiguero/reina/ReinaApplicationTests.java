@@ -175,6 +175,13 @@ class ReinaApplicationTests {
 			.andExpect(MockMvcResultMatchers.status().isFound());
 	}
 	
+	@Test
+	@Order(100)
+	void testExeption() throws Exception {
+		this._mock.perform(post("/v1/failHormiga").content(mapper.writeValueAsBytes(getAnts())).header("Content-Type", "application/JSON"))
+			.andExpect(MockMvcResultMatchers.status().isNotFound());
+	}
+
 	private List<HormigaEntity> getAnts() {
 		return this.ants;
 	}

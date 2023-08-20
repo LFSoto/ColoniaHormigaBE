@@ -19,7 +19,7 @@
 
 		<sonar.language>java</sonar.language>
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>	
-		<sonar.exclusions>**/pom.xml</sonar.exclusions>		
+		<sonar.exclusions>**/pom.xml, **/ReinaApplication.java, **/HormigaRepository.java</sonar.exclusions>		
 		<sonar.scm.provider>git</sonar.scm.provider>
 		<sonar.log.level>TRACE</sonar.log.level>
 		<sonar.verbose>true</sonar.verbose>	
