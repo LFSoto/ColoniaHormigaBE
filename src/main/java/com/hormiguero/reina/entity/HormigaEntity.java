@@ -8,7 +8,9 @@ import java.util.Date;
 public class HormigaEntity {
 	
 	public HormigaEntity() {
-		
+		this.id = -1;
+		this.type = "FAILURE";
+		this.birthday = new Date();
 	}
 	
     @Id

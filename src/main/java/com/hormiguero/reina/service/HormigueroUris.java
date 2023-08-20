@@ -6,8 +6,8 @@ import java.util.Properties;
 
 public class HormigueroUris {
 
-	private Properties _props;
-	private static HormigueroUris _singleInstance;
+	private Properties props;
+	private static HormigueroUris singleInstance;
 
 	public enum SubSistemas {
 		ENTORNO,
@@ -15,14 +15,14 @@ public class HormigueroUris {
 	}
 
 	private HormigueroUris() {
-		this._props = loadApplicationProps();
+		this.props = loadApplicationProps();
 	}
 	
 	public static HormigueroUris getInstance() {
-		if (_singleInstance == null) {
-			_singleInstance = new HormigueroUris();
+		if (singleInstance == null) {
+			singleInstance = new HormigueroUris();
 		}
-		return _singleInstance;
+		return singleInstance;
 	}
 
 	private Properties loadApplicationProps() {
@@ -40,10 +40,10 @@ public class HormigueroUris {
 		switch(sistema) {
 		
 		case ENTORNO:
-			value = _props.getProperty("hormiguero.entorno");
+			value = props.getProperty("hormiguero.entorno");
 			break;
 		case COMIDA:
-			value = _props.getProperty("hormiguero.comida");
+			value = props.getProperty("hormiguero.comida");
 			break;
 		}
 		return value;

@@ -30,11 +30,10 @@ import com.hormiguero.reina.service.HormigueroUris.SubSistemas;
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
 @TestInstance(Lifecycle.PER_CLASS)
-public class ReinaApplicationTests {
+class ReinaApplicationTests {
 
 	@Autowired
-	public HormigaController instance;
-	
+	private HormigaController instance;	
 	private MockMvc _mock;
 	private ObjectMapper mapper;
 	private List<HormigaEntity> ants;
@@ -43,7 +42,7 @@ public class ReinaApplicationTests {
 	
 	@Test
 	@BeforeAll
-	public void initializeApp() {
+	void initializeApp() {
 		System.setProperty("spring.data.mongodb.uri", "mongodb+srv://queen:reina2023reina@hormigareina.twxfm7c.mongodb.net/hormiguero?retryWrites=true&w=majority");
 		this._mock = standaloneSetup(instance)
 				.build();
@@ -55,20 +54,20 @@ public class ReinaApplicationTests {
 	
 	@Test
 	@BeforeEach
-	public void testEntorno() {
+	void testEntorno() {
 		Assert.isTrue(this.entornoStatus, "Imposible crear nuevas hormigas cuando el Subsistema de Entorno esta caido. Endpoint: " + HormigueroUris.getInstance().getUrl(SubSistemas.ENTORNO));
 	}
 	
 	@Test
 	@BeforeEach
-	public void testComida() {
+	void testComida() {
 		Assert.isTrue(this.comidaStatus, "Imposible crear nuevas hormigas cuando el Subsistema de Comida esta caido. Endpoint: " + HormigueroUris.getInstance().getUrl(SubSistemas.COMIDA));
 	}
 
 	
 	@Test
 	@Order(0)
-	public void testFoodCost()  throws Exception {
+	void testFoodCost()  throws Exception {
 		this.entornoStatus = false;
 		this._mock.perform(get("/v1/entorno/foodCost"))
 			.andExpect(MockMvcResultMatchers.status().isOk());
@@ -77,7 +76,7 @@ public class ReinaApplicationTests {
 	
 	@Test
 	@Order(1)
-	public void testFoodAvailable()  throws Exception {
+	void testFoodAvailable()  throws Exception {
 		this.comidaStatus = false;
 		this._mock.perform(get("/v1/comida/foodAvailable"))
 			.andExpect(MockMvcResultMatchers.status().isOk());
@@ -86,14 +85,16 @@ public class ReinaApplicationTests {
 
 	@Test
 	@Order(5)
-	public void testNuevaHormiga() throws Exception {
-		
+	void testNuevaHormiga() throws Exception {
+		List<HormigaEntity> tenAnts = getHormiga(10);
+		Assert.notEmpty(tenAnts, "No se crearon 10 hormigas iniciales");
+		Assert.isTrue(tenAnts.size() == 10, "Se esperaban 10 hormigas, mientras que se encontraron " + tenAnts.size());
 		setAnts(getHormiga(10));
 	}
 	
 	@Test
 	@Order(6)
-	public void testNegociarHormiga() throws Exception {
+	void testNegociarHormiga() throws Exception {
 
 		List<HormigaEntity> negociated = getHormiga(1);
 		Assert.isTrue(negociated.addAll(getAnts()), "La nueva hormiga negociada no ha podido ser agregada a la lista existente.");
@@ -102,7 +103,7 @@ public class ReinaApplicationTests {
 
 	@Test
 	@Order(7)
-	public void testListtAll() throws Exception {
+	void testListtAll() throws Exception {
 		byte[] response = this._mock.perform(get("/v1/listAll"))
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andReturn().getResponse().getContentAsByteArray();
@@ -114,7 +115,7 @@ public class ReinaApplicationTests {
 	
 	@Test
 	@Order(10)
-	public void testReleaseHormiga() throws Exception {
+	void testReleaseHormiga() throws Exception {
 		
 		this._mock.perform(post("/v1/releaseHormiga").content(mapper.writeValueAsBytes(getAnts().listIterator(5))).header("Content-Type", "application/JSON"))
 			.andExpect(MockMvcResultMatchers.status().isOk());
@@ -122,14 +123,14 @@ public class ReinaApplicationTests {
 	
 	@Test
 	@Order(11)
-	public void testReasignacionHormiga() throws Exception {
+	void testReasignacionHormiga() throws Exception {
 		List<HormigaEntity> reasigned = getHormiga(5);
 		Assert.isTrue(reasigned.size() == 5, "Se esperaba tomar 5 hormigas libres, pero se reasignaron apenas " + reasigned.size());
 	}
 	
 	@Test
 	@Order(20)
-	public void testKillHormiga() throws Exception {
+	void testKillHormiga() throws Exception {
 		this._mock.perform(post("/v1/killHormiga").content(mapper.writeValueAsBytes(getAnts())).header("Content-Type", "application/JSON"))
 			.andExpect(MockMvcResultMatchers.status().isOk());
 	}
@@ -137,16 +138,16 @@ public class ReinaApplicationTests {
 	
 	@Test
 	@Order(40)
-	public void testSwagger() throws Exception {
+	void testSwagger() throws Exception {
 		this._mock.perform(get("/swagger"))
 			.andExpect(MockMvcResultMatchers.status().isFound());
 	}
 	
-	public List<HormigaEntity> getAnts() {
+	private List<HormigaEntity> getAnts() {
 		return this.ants;
 	}
 	
-	public void setAnts(List<HormigaEntity> ants) {
+	private void setAnts(List<HormigaEntity> ants) {
 		this.ants = ants;
 	}
 	

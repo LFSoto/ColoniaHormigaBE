@@ -1,6 +1,5 @@
 package com.hormiguero.reina.service;
 
-import java.lang.Exception;
 import java.util.List;
 
 import  com.hormiguero.reina.entity.HormigaEntity;

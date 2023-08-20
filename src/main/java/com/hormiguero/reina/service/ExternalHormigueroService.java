@@ -30,18 +30,19 @@ public class ExternalHormigueroService {
 		this.entornoEndpoint = endpoint;
 	}
 	
-	public int getHormigaCost() throws Exception {
+	public int getHormigaCost() {
 		setUrl(HormigueroUris.getInstance().getUrl(HormigueroUris.SubSistemas.ENTORNO));
 		int cost = 3;
 		if (entornoEndpoint.startsWith("http")) {
 
 			EntornoEntity result = this.endpoint.getForObject(entornoEndpoint, EntornoEntity.class);
-			cost = result.getAntCost();
+			if (result != null) 
+				cost = result.getAntCost();
 		}
 		return cost;
 	}
 	
-	public int getFoodAvailable() throws Exception {
+	public int getFoodAvailable() {
 		setUrl(HormigueroUris.getInstance().getUrl(HormigueroUris.SubSistemas.COMIDA));
 		int result = this.cacheFood == 0 ? 10 : this.cacheFood;
 		if (entornoEndpoint.startsWith("http")) {
@@ -51,7 +52,7 @@ public class ExternalHormigueroService {
 		return result;
 	}
 
-	public void getFood(int food) throws Exception  {
+	public void getFood(int food)  {
 		if (food <= 0) return;
 		setUrl(HormigueroUris.getInstance().getUrl(HormigueroUris.SubSistemas.COMIDA) + "?food=" + food);
 		if (entornoEndpoint.startsWith("http")) {
