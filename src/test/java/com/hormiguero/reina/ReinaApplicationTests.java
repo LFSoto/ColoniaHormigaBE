@@ -78,7 +78,7 @@ class ReinaApplicationTests {
 
 	
 	@Test
-	@Order(0)
+	@Order(10)
 	void testFoodCost()  throws Exception {
 		this.entornoStatus = false;
 		this._mock.perform(get("/v1/entorno/foodCost"))
@@ -87,7 +87,7 @@ class ReinaApplicationTests {
 	}
 	
 	@Test
-	@Order(1)
+	@Order(20)
 	void testFoodAvailable()  throws Exception {
 		this.comidaStatus = false;
 		this._mock.perform(get("/v1/comida/foodAvailable"))
@@ -96,7 +96,7 @@ class ReinaApplicationTests {
 	}
 
 	@Test
-	@Order(5)
+	@Order(30)
 	void testNuevaHormiga() throws Exception {
 
 		String url = "/v1/getHormiga?cantidad={0}&tipo=TESTING";
@@ -112,7 +112,7 @@ class ReinaApplicationTests {
 	}
 	
 	@Test
-	@Order(6)
+	@Order(40)
 	void testNegociarHormiga() throws Exception {
 
 		String url = "/v1/getHormiga?cantidad={0}&tipo=TESTING";
@@ -127,7 +127,7 @@ class ReinaApplicationTests {
 	}
 
 	@Test
-	@Order(7)
+	@Order(50)
 	void testListtAll() throws Exception {
 		byte[] response = this._mock.perform(get("/v1/listAll"))
 			.andExpect(MockMvcResultMatchers.status().isOk())
@@ -139,7 +139,7 @@ class ReinaApplicationTests {
 	}
 	
 	@Test
-	@Order(10)
+	@Order(60)
 	void testReleaseHormiga() throws Exception {
 		
 		this._mock.perform(post("/v1/releaseHormiga").content(mapper.writeValueAsBytes(getAnts())).header("Content-Type", "application/JSON"))
@@ -147,7 +147,7 @@ class ReinaApplicationTests {
 	}
 	
 	@Test
-	@Order(11)
+	@Order(70)
 	void testReasignacionHormiga() throws Exception {
 		
 		String url = "/v1/getHormiga?cantidad={0}&tipo=TESTING";
@@ -161,7 +161,7 @@ class ReinaApplicationTests {
 	}
 	
 	@Test
-	@Order(20)
+	@Order(80)
 	void testKillHormiga() throws Exception {
 		this._mock.perform(post("/v1/killHormiga").content(mapper.writeValueAsBytes(getAnts())).header("Content-Type", "application/JSON"))
 			.andExpect(MockMvcResultMatchers.status().isOk());
@@ -169,7 +169,7 @@ class ReinaApplicationTests {
 	
 	
 	@Test
-	@Order(40)
+	@Order(90)
 	void testSwagger() throws Exception {
 		this._mock.perform(get("/swagger"))
 			.andExpect(MockMvcResultMatchers.status().isFound());
