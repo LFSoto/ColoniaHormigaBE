@@ -13,7 +13,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building Reina application...'
-                sh 'mvn clean install -DskipTests compile'
+                sh 'mvn clean install compile'
             }
         }
         stage('Test') {
@@ -26,7 +26,7 @@ pipeline {
           steps {
               echo 'Running Sonar Scanner...'
               withSonarQubeEnv(installationName: 'SonarQube') { 
-              sh "mvn clean test sonar:sonar -Dsonar.projectKey=SubSistemaReina -Dsonar.projectName='SubSistemaReina'"
+              sh "mvn clean sonar:sonar -Dsonar.projectKey=SubSistemaReina -Dsonar.projectName='SubSistemaReina'"
             }
           }
         }
