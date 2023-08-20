@@ -103,7 +103,7 @@ public class HormigaController {
 			@ApiResponse(responseCode = "500", description = "El Subsistema de Entorno se encuentra fuera de línea o mal configurado en el Subsistema Reina.", content = @Content)
 	})
     @GetMapping("/v1/entorno/foodCost")
-    public int getFoodCost() throws Exception{
+    public int getFoodCost() {
     	return this.endpoint.getHormigaCost();
     }
 	
@@ -114,7 +114,7 @@ public class HormigaController {
 			@ApiResponse(responseCode = "500", description = "El Subsistema de Recolección de Comida se encuentra fuera de línea o mal configurado en el Subsistema Reina.", content = @Content)
 	})
     @GetMapping("/v1/comida/foodAvailable")
-    public int getFoodAvailable() throws Exception {
+    public int getFoodAvailable() {
     	return this.endpoint.getFoodAvailable();
     }
     

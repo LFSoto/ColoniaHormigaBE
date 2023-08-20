@@ -38,7 +38,7 @@ public class ReinaService implements IReinaService {
     }
     
     
-    private void negociateHormigas(int cantidad, String tipo, List<HormigaEntity> all, List<HormigaEntity> reservadas) throws Exception {
+    private void negociateHormigas(int cantidad, String tipo, List<HormigaEntity> all, List<HormigaEntity> reservadas) {
     	
     	while (all.size() < FREE_ANTS && cantidad > 0) {
     		
