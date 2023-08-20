@@ -19,13 +19,14 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing...'
+                sh 'mvn test'
             }
         }
         stage('Sonar Scan') {
           steps {
               echo 'Running Sonar Scanner...'
               withSonarQubeEnv(installationName: 'SonarQube') { 
-              sh "mvn clean compile sonar:sonar -Dsonar.projectKey=SubSistemaReina -Dsonar.projectName='SubSistemaReina'"
+              sh "mvn clean package sonar:sonar -Dsonar.projectKey=SubSistemaReina -Dsonar.projectName='SubSistemaReina'"
             }
           }
         }
