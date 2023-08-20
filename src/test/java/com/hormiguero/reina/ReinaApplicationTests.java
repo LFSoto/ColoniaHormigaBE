@@ -98,7 +98,14 @@ class ReinaApplicationTests {
 	@Test
 	@Order(5)
 	void testNuevaHormiga() throws Exception {
-		List<HormigaEntity> tenAnts = getHormiga(10);
+
+		String url = "/v1/getHormiga?cantidad={0}&tipo=TESTING";
+		String response = this._mock.perform(get(url, 10))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn().getResponse().getContentAsString();
+		Assert.hasLength(response, "La respuesta de " + url + " esta vacía");
+		
+		List<HormigaEntity> tenAnts = mapper.readValue(response, new TypeReference<List<HormigaEntity>>() {});
 		Assert.notEmpty(tenAnts, "No se crearon 10 hormigas iniciales");
 		Assert.isTrue(tenAnts.size() == 10, "Se esperaban 10 hormigas, mientras que se encontraron " + tenAnts.size());
 		setAnts(tenAnts);
@@ -108,7 +115,13 @@ class ReinaApplicationTests {
 	@Order(6)
 	void testNegociarHormiga() throws Exception {
 
-		List<HormigaEntity> negociated = getHormiga(1);
+		String url = "/v1/getHormiga?cantidad={0}&tipo=TESTING";
+		String response = this._mock.perform(get(url, 1))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn().getResponse().getContentAsString();
+		Assert.hasLength(response, "La respuesta de " + url + " esta vacía");
+		
+		List<HormigaEntity> negociated = mapper.readValue(response, new TypeReference<List<HormigaEntity>>() {});
 		Assert.isTrue(negociated.addAll(getAnts()), "La nueva hormiga negociada no ha podido ser agregada a la lista existente.");
 		setAnts(negociated);
 	}
@@ -136,7 +149,14 @@ class ReinaApplicationTests {
 	@Test
 	@Order(11)
 	void testReasignacionHormiga() throws Exception {
-		List<HormigaEntity> reasigned = getHormiga(5);
+		
+		String url = "/v1/getHormiga?cantidad={0}&tipo=TESTING";
+		String response = this._mock.perform(get(url, 5))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn().getResponse().getContentAsString();
+		Assert.hasLength(response, "La respuesta de " + url + " esta vacía");
+		
+		List<HormigaEntity> reasigned = mapper.readValue(response, new TypeReference<List<HormigaEntity>>() {});
 		Assert.isTrue(reasigned.size() == 5, "Se esperaba tomar 5 hormigas libres, pero se reasignaron apenas " + reasigned.size());
 	}
 	
@@ -161,17 +181,5 @@ class ReinaApplicationTests {
 	
 	private void setAnts(List<HormigaEntity> ants) {
 		this.ants = ants;
-	}
-	
-	private List<HormigaEntity> getHormiga(int cantidad) throws Exception {
-		
-		String url = "/v1/getHormiga?cantidad={0}&tipo=TESTING";
-		String response = this._mock.perform(get(url, cantidad)).andReturn().getResponse().getContentAsString();
-		Assert.hasLength(response, "La respuesta de " + url + " esta vacía");
-		
-		List<HormigaEntity> ants = mapper.readValue(response, new TypeReference<List<HormigaEntity>>() {});
-		Assert.noNullElements(ants, "No se encontraron hormigas creadas");
-		
-		return ants;
 	}
 }
