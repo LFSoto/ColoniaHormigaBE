@@ -16,6 +16,16 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
  		<maven.compiler.target>1.8</maven.compiler.target>
 		<sonar.host.url>http://ec2-3-20-151-66.us-east-2.compute.amazonaws.com:9000</sonar.host.url>
+
+		<sonar.language>java</sonar.language>
+		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>	
+		<sonar.exclusions>**/pom.xml</sonar.exclusions>		
+		<sonar.scm.provider>git</sonar.scm.provider>
+		<sonar.log.level>TRACE</sonar.log.level>
+		<sonar.verbose>true</sonar.verbose>	
+		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+		
+	 <sonar.coverage.jacoco.xmlReportPaths>${maven.multiModuleProjectDirectory}/target/reports/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -57,6 +67,12 @@
 			<artifactId>maven-compiler-plugin</artifactId>
 			<version>3.11.0</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.jacoco</groupId> 
+			<artifactId>jacoco-maven-plugin</artifactId>
+			<version>0.8.6</version>
+		</dependency>
 		
 	</dependencies>
 	<build>
@@ -83,6 +99,27 @@
 					</manifest>
 					</archive>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.10</version>
+				<executions>
+					<execution>
+						<id>jacoco-initialize</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>jacoco-site</id>
+						<phase>package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
