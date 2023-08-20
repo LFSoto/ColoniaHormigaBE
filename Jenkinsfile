@@ -19,14 +19,14 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing...'
-                sh 'mvn clean test'
+                sh 'mvn test'
             }
         }
         stage('Sonar Scan') {
           steps {
               echo 'Running Sonar Scanner...'
               withSonarQubeEnv(installationName: 'SonarQube') { 
-              sh "mvn clean sonar:sonar -Dsonar.projectKey=SubSistemaReina -Dsonar.projectName='SubSistemaReina'"
+              sh "mvn clean package sonar:sonar -Dsonar.projectKey=SubSistemaReina -Dsonar.projectName='SubSistemaReina'"
             }
           }
         }
@@ -41,7 +41,7 @@ pipeline {
         stage("Package executable") {
           steps {
               echo 'Creating java executable file...'
-              sh 'mvn package -DskipTests'
+              sh 'mvn package -Dmaven.test.skip'
             }
         }
         stage("Deploy") {
