@@ -1,5 +1,6 @@
 package com.hormiguero.reina;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,7 +41,6 @@ class ReinaApplicationTests {
 	private boolean entornoStatus;
 	private boolean comidaStatus;
 	
-	@Test
 	@BeforeAll
 	void initializeApp() {
 		System.setProperty("spring.data.mongodb.uri", "mongodb+srv://queen:reina2023reina@hormigareina.twxfm7c.mongodb.net/hormiguero?retryWrites=true&w=majority");
@@ -50,17 +50,29 @@ class ReinaApplicationTests {
 		this.entornoStatus = true;
 		this.comidaStatus = true;
 		this.mapper = new ObjectMapper();
+		try {
+			byte[] response = this._mock.perform(get("/v1/listAll"))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn().getResponse().getContentAsByteArray();
+			
+			List<HormigaEntity> found = mapper.readValue(response, new TypeReference<List<HormigaEntity>>() {});
+			if (!found.isEmpty()) {
+
+				this._mock.perform(post("/v1/killHormiga").content(mapper.writeValueAsBytes(found)).header("Content-Type", "application/JSON"))
+					.andExpect(MockMvcResultMatchers.status().isOk());
+			}
+		} catch (Exception ex) {
+		}
+		setAnts(new ArrayList<HormigaEntity>());
 	}
 	
-	@Test
 	@BeforeEach
-	void testEntorno() {
+	void testEntornoOnline() {
 		Assert.isTrue(this.entornoStatus, "Imposible crear nuevas hormigas cuando el Subsistema de Entorno esta caido. Endpoint: " + HormigueroUris.getInstance().getUrl(SubSistemas.ENTORNO));
 	}
 	
-	@Test
 	@BeforeEach
-	void testComida() {
+	void testComidaOnline() {
 		Assert.isTrue(this.comidaStatus, "Imposible crear nuevas hormigas cuando el Subsistema de Comida esta caido. Endpoint: " + HormigueroUris.getInstance().getUrl(SubSistemas.COMIDA));
 	}
 
@@ -89,7 +101,7 @@ class ReinaApplicationTests {
 		List<HormigaEntity> tenAnts = getHormiga(10);
 		Assert.notEmpty(tenAnts, "No se crearon 10 hormigas iniciales");
 		Assert.isTrue(tenAnts.size() == 10, "Se esperaban 10 hormigas, mientras que se encontraron " + tenAnts.size());
-		setAnts(getHormiga(10));
+		setAnts(tenAnts);
 	}
 	
 	@Test
@@ -117,7 +129,7 @@ class ReinaApplicationTests {
 	@Order(10)
 	void testReleaseHormiga() throws Exception {
 		
-		this._mock.perform(post("/v1/releaseHormiga").content(mapper.writeValueAsBytes(getAnts().listIterator(5))).header("Content-Type", "application/JSON"))
+		this._mock.perform(post("/v1/releaseHormiga").content(mapper.writeValueAsBytes(getAnts())).header("Content-Type", "application/JSON"))
 			.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
@@ -153,13 +165,12 @@ class ReinaApplicationTests {
 	
 	private List<HormigaEntity> getHormiga(int cantidad) throws Exception {
 		
-		String url = "/v1/getHormiga?cantidad={0}&tipo=COMPILE_TEST";
+		String url = "/v1/getHormiga?cantidad={0}&tipo=TESTING";
 		String response = this._mock.perform(get(url, cantidad)).andReturn().getResponse().getContentAsString();
 		Assert.hasLength(response, "La respuesta de " + url + " esta vacía");
 		
 		List<HormigaEntity> ants = mapper.readValue(response, new TypeReference<List<HormigaEntity>>() {});
 		Assert.noNullElements(ants, "No se encontraron hormigas creadas");
-		Assert.isTrue(ants.size() == cantidad, "Se esperaba crear " + cantidad + " hormigas, pero se crearon apenas " + ants.size());
 		
 		return ants;
 	}

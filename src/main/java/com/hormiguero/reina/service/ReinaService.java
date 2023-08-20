@@ -70,7 +70,7 @@ public class ReinaService implements IReinaService {
     	for (int i = 0; i < all.size() && cantidad > 0; i++) {
     		HormigaEntity hormiga = all.get(i);
     		
-    		if (hormiga.getType() == null) {
+    		if (hormiga.getType().compareTo("FREE") == 0) {
     			
     			hormiga.setBirthday(Date.from(Instant.now()));
     			hormiga.setType(tipo);
@@ -90,7 +90,7 @@ public class ReinaService implements IReinaService {
         for (HormigaEntity hormiga : hormigas) {
             HormigaEntity existingHormiga = hormigaRepository.findById(hormiga.getId()).orElse(null);
             if (existingHormiga != null) {
-                existingHormiga.setType(null);
+                existingHormiga.setType("FREE");
                 hormigaRepository.save(existingHormiga);
             }
         }		

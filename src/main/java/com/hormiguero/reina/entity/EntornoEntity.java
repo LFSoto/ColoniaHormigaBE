@@ -18,10 +18,6 @@ public class EntornoEntity {
 		this.antCost = antCost;
 	}
 	
-	public String getId() {
-		return this.id;
-	}
-	
 	public int getAntCost() {
 		return this.antCost;
 	}
