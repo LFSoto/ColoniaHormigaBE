@@ -1,7 +1,10 @@
 package com.hormiguero.reina.controller;
 
+import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +46,8 @@ public class HormigaController {
 	
 	@Autowired
 	private ExternalHormigueroService endpoint;
+	
+	private Logger log = LoggerFactory.getLogger(HormigaController.class);
 
 	
 	@Operation(summary = "Crear hormigas según el tipo y la cantidad parametrizada.")
@@ -55,7 +60,11 @@ public class HormigaController {
 			@ApiResponse(responseCode = "500", description = "Subsistema Entorno y/o Comida están fuera de línea.", content = @Content)})
     @GetMapping("/v1/getHormiga")
     public List<HormigaEntity> getHormiga(@RequestParam int cantidad, @RequestParam String tipo) throws Exception {
-		return reina.getHormigas(cantidad, tipo);
+		long id = System.currentTimeMillis();
+		log.info("RequestId: {0}. Se han solicitado {1} hormigas de tipo {2}.", id, cantidad, tipo);
+		List<HormigaEntity> result = reina.getHormigas(cantidad, tipo);
+		log.info("RequestId: {0}. Se logró crear {1} hormigas de tipo {2}.", id, result.size(), tipo);
+		return result;
     }
 
 	
@@ -65,7 +74,13 @@ public class HormigaController {
 	})
     @PostMapping(value = "/v1/releaseHormiga", consumes = {"application/JSON"})
     public void releaseHormigas(@Parameter(description = "Lista de hormigas a liberar") @RequestBody HormigaEntity[] hormigas) {
-    	reina.releaseHormigas(hormigas);
+		if (hormigas.length > 0) {
+	    	reina.releaseHormigas(hormigas);
+	    	log.info("Se han liberado {0} hormigas de tipo {1}.", hormigas.length, hormigas[0].getType());
+		}
+		else {
+			log.warn("La lista de hormigas a liberar se encuentra vacía.");
+		}
     }
 	
 
@@ -75,8 +90,14 @@ public class HormigaController {
 	})
     @PostMapping(value = "/v1/killHormiga", consumes = {"application/JSON"})
     public void killHormigas(@Parameter(description = "Lista de hormigas a sepultar") @RequestBody HormigaEntity[] hormigas) {
-		reina.killHormigas(hormigas);
-    }
+		if (hormigas.length > 0) {
+			reina.killHormigas(hormigas);
+			log.info("Se han sepultado {0} hormigas de tipo {1}.", hormigas.length, hormigas[0].getType());
+		}
+		else {
+			log.warn("La lista de hormigas a sepultar se encuentra vacía.");
+		}
+	}
     
 	
 	@Operation(summary = "Diagnosticar cuántas hormigas han sido creadas.")
@@ -89,7 +110,9 @@ public class HormigaController {
 	})
     @GetMapping("/v1/listAll")
     public List<HormigaEntity> listAll() {
-    	return this.reina.listAll();
+		List<HormigaEntity> all = this.reina.listAll();
+		log.info("[DIAGNOSTICO] Se solicitó listar todas las hormigas. Encontradas: {0}", all.size());
+		return all;
     }
     
 	
@@ -104,7 +127,9 @@ public class HormigaController {
 	})
     @GetMapping("/v1/entorno/foodCost")
     public int getFoodCost() {
-    	return this.endpoint.getHormigaCost();
+		int result = this.endpoint.getHormigaCost();
+		log.info("[DIAGNOSTICO] Se solicitó verificar la integración con Subsistema Entorno. Costo: {0}", result);
+		return result;
     }
 	
     
@@ -115,13 +140,15 @@ public class HormigaController {
 	})
     @GetMapping("/v1/comida/foodAvailable")
     public int getFoodAvailable() {
-    	return this.endpoint.getFoodAvailable();
+		int result = this.endpoint.getFoodAvailable();
+		log.info("[DIAGNOSTICO] Se solicitó verificar la integración con Subsistema Recolección de Comida. Comida disponible: {0}", result);
+    	return result;
     }
     
 	
     @GetMapping("/swagger")
     public ModelAndView redirectToSwagger(ModelMap model) {
-    	
+    	log.info("[DIAGNOSTICO] Se esta redireccionando al Swagger UI");
     	return new ModelAndView("redirect:/swagger-ui/index.html", model);
     }
     

@@ -3,6 +3,8 @@ package com.hormiguero.reina.service;
 import java.time.Duration;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
@@ -16,14 +18,14 @@ public class ExternalHormigueroService {
 
 	private final RestTemplate endpoint;
 	private String entornoEndpoint;
-	private int cacheFood;
+	private Logger log;
 	
 	public ExternalHormigueroService(RestTemplateBuilder builder) {
 		builder.setConnectTimeout(Duration.ofSeconds(3));
 		builder.setReadTimeout(Duration.ofSeconds(3));
 		this.endpoint = builder.build();
+		this.log = LoggerFactory.getLogger(ExternalHormigueroService.class);
 		setUrl("");
-		this.cacheFood = 0;
 	}
 	
 	private void setUrl(String endpoint) {
@@ -44,11 +46,10 @@ public class ExternalHormigueroService {
 	
 	public int getFoodAvailable() {
 		setUrl(HormigueroUris.getInstance().getUrl(HormigueroUris.SubSistemas.COMIDA));
-		int result = this.cacheFood == 0 ? 10 : this.cacheFood;
+		int result = 0;
 		if (entornoEndpoint.startsWith("http")) {
 			result = Integer.parseInt(this.endpoint.getForObject(entornoEndpoint, String.class));
 		}
-		this.cacheFood = this.cacheFood == 0 ? result : this.cacheFood;
 		return result;
 	}
 
@@ -58,14 +59,12 @@ public class ExternalHormigueroService {
 		if (entornoEndpoint.startsWith("http")) {
 			try {
 				this.endpoint.put(entornoEndpoint, food);
-			} catch (HttpServerErrorException ex) {
-				System.out.format("{0:yyyy-MM-ddTHH:mm:ss.000} --- ERROR --- COMIDA --- {1}", new Date(), ex.getResponseBodyAsString());
-				return;
+			} catch (HttpServerErrorException ex) {				
+				log.error("[{0:yyyy-MM-ddTHH:mm:ss.000}] [PUT] {1}. Error message: {2}", new Date(), this.entornoEndpoint, ex.getResponseBodyAsString());
 			} catch (ResourceAccessException ex) {
-				System.out.format("{0:yyyy-MM-ddTHH:mm:ss.000} --- WARNING --- COMIDA --- {1}", new Date(), ex.getMessage());
+				log.error("[{0:yyyy-MM-ddTHH:mm:ss.000}] [PUT] {1}. Error message: {2}", new Date(), this.entornoEndpoint, ex.getMessage());				
 			}
 			
 		}
-		this.cacheFood -= food;
 	}	
 }

@@ -147,6 +147,14 @@ class ReinaApplicationTests {
 	}
 	
 	@Test
+	@Order(61)
+	void testReleaseEmpty() throws Exception {
+
+		this._mock.perform(post("/v1/releaseHormiga").content(mapper.writeValueAsBytes(new ArrayList<HormigaEntity>())).header("Content-Type", "application/JSON"))
+			.andExpect(MockMvcResultMatchers.status().isOk());	
+	}
+	
+	@Test
 	@Order(70)
 	void testReasignacionHormiga() throws Exception {
 		
@@ -165,6 +173,14 @@ class ReinaApplicationTests {
 	void testKillHormiga() throws Exception {
 		this._mock.perform(post("/v1/killHormiga").content(mapper.writeValueAsBytes(getAnts())).header("Content-Type", "application/JSON"))
 			.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+	
+	@Test
+	@Order(81)
+	void testKillEmpty() throws Exception {
+		
+		this._mock.perform(post("/v1/killHormiga").content(mapper.writeValueAsBytes(new ArrayList<HormigaEntity>())).header("Content-Type", "application/JSON"))
+		.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	
