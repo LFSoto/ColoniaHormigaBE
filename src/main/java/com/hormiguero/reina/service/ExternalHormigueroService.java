@@ -1,7 +1,6 @@
 package com.hormiguero.reina.service;
 
 import java.time.Duration;
-import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,9 +59,9 @@ public class ExternalHormigueroService {
 			try {
 				this.endpoint.put(entornoEndpoint, food);
 			} catch (HttpServerErrorException ex) {				
-				log.error("[{0:yyyy-MM-ddTHH:mm:ss.000}] [PUT] {1}. Error message: {2}", new Date(), this.entornoEndpoint, ex.getResponseBodyAsString());
+				log.error("[PUT] {}. Error message: {}", this.entornoEndpoint, ex.getResponseBodyAsString());
 			} catch (ResourceAccessException ex) {
-				log.error("[{0:yyyy-MM-ddTHH:mm:ss.000}] [PUT] {1}. Error message: {2}", new Date(), this.entornoEndpoint, ex.getMessage());				
+				log.error("[PUT] {}. Error message: {}", this.entornoEndpoint, ex.getMessage());				
 			}
 			
 		}

@@ -12,13 +12,6 @@ public class EndpointError {
     private String message;
     private List<String> errors;
 
-    public EndpointError(HttpStatus status, String message, List<String> errors) {
-        super();
-        this.status = status;
-        this.message = message;
-        this.errors = errors;
-    }
-
     public EndpointError(HttpStatus status, String message, String error) {
         super();
         this.status = status;

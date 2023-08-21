@@ -60,9 +60,9 @@ public class HormigaController {
     @GetMapping("/v1/getHormiga")
     public List<HormigaEntity> getHormiga(@RequestParam int cantidad, @RequestParam String tipo) throws Exception {
 		long id = System.currentTimeMillis();
-		log.info("RequestId: {0}. Se han solicitado {1} hormigas de tipo {2}.", id, cantidad, tipo);
+		log.info("RequestId: {}. Se han solicitado {} hormigas de tipo {}.", id, cantidad, tipo);
 		List<HormigaEntity> result = reina.getHormigas(cantidad, tipo);
-		log.info("RequestId: {0}. Se logró crear {1} hormigas de tipo {2}.", id, result.size(), tipo);
+		log.info("RequestId: {}. Se logró crear {} hormigas de tipo {}.", id, result.size(), tipo);
 		return result;
     }
 
@@ -75,7 +75,7 @@ public class HormigaController {
     public void releaseHormigas(@Parameter(description = "Lista de hormigas a liberar") @RequestBody HormigaEntity[] hormigas) {
 		if (hormigas.length > 0) {
 	    	reina.releaseHormigas(hormigas);
-	    	log.info("Se han liberado {0} hormigas de tipo {1}.", hormigas.length, hormigas[0].getType());
+	    	log.info("Se han liberado {} hormigas de tipo {}.", hormigas.length, hormigas[0].getType());
 		}
 		else {
 			log.warn("La lista de hormigas a liberar se encuentra vacía.");
@@ -91,7 +91,7 @@ public class HormigaController {
     public void killHormigas(@Parameter(description = "Lista de hormigas a sepultar") @RequestBody HormigaEntity[] hormigas) {
 		if (hormigas.length > 0) {
 			reina.killHormigas(hormigas);
-			log.info("Se han sepultado {0} hormigas de tipo {1}.", hormigas.length, hormigas[0].getType());
+			log.info("Se han sepultado {} hormigas de tipo {}.", hormigas.length, hormigas[0].getType());
 		}
 		else {
 			log.warn("La lista de hormigas a sepultar se encuentra vacía.");
@@ -110,7 +110,7 @@ public class HormigaController {
     @GetMapping("/v1/listAll")
     public List<HormigaEntity> listAll() {
 		List<HormigaEntity> all = this.reina.listAll();
-		log.info("[DIAGNOSTICO] Se solicitó listar todas las hormigas. Encontradas: {0}", all.size());
+		log.info("[DIAGNOSTICO] Se solicitó listar todas las hormigas. Encontradas: {}", all.size());
 		return all;
     }
     
@@ -127,7 +127,7 @@ public class HormigaController {
     @GetMapping("/v1/entorno/foodCost")
     public int getFoodCost() {
 		int result = this.endpoint.getHormigaCost();
-		log.info("[DIAGNOSTICO] Se solicitó verificar la integración con Subsistema Entorno. Costo: {0}", result);
+		log.info("[DIAGNOSTICO] Se solicitó verificar la integración con Subsistema Entorno. Costo: {}", result);
 		return result;
     }
 	
@@ -140,7 +140,7 @@ public class HormigaController {
     @GetMapping("/v1/comida/foodAvailable")
     public int getFoodAvailable() {
 		int result = this.endpoint.getFoodAvailable();
-		log.info("[DIAGNOSTICO] Se solicitó verificar la integración con Subsistema Recolección de Comida. Comida disponible: {0}", result);
+		log.info("[DIAGNOSTICO] Se solicitó verificar la integración con Subsistema Recolección de Comida. Comida disponible: {}", result);
     	return result;
     }
     
