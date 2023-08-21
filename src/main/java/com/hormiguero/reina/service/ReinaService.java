@@ -63,7 +63,7 @@ public class ReinaService implements IReinaService {
 
     public List<HormigaEntity> getHormigas(int cantidad, String tipo) throws Exception {
     	
-    	List<HormigaEntity> resultado = new ArrayList<HormigaEntity>();
+    	List<HormigaEntity> resultado = new ArrayList<>();
     	List<HormigaEntity> all = hormigaRepository.findAll();
     	
     	for (int i = 0; i < all.size() && cantidad > 0; i++) {
