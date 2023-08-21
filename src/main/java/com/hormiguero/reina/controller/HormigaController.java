@@ -128,6 +128,6 @@ public class HormigaController {
     @ExceptionHandler({ Exception.class })
     public ResponseEntity<EndpointError> handleAll(Exception ex, WebRequest request) {
         EndpointError apiError = new EndpointError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getLocalizedMessage(), ex.getMessage());
-        return new ResponseEntity<EndpointError>(apiError, null, apiError.getStatus());
+        return new ResponseEntity<>(apiError, null, apiError.getStatus());
     }
 }
