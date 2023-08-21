@@ -1,6 +1,5 @@
 package com.hormiguero.reina.service;
 
-import java.lang.Exception;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
