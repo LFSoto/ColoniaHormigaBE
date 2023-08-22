@@ -50,7 +50,7 @@ public class HormigaController {
 	private Logger log = LoggerFactory.getLogger(HormigaController.class);
 
 	
-	@Operation(summary = "Crear hormigas según el tipo y la cantidad parametrizada.")
+	@Operation(summary = "Crear hormigas según el tipo y la cantidad parametrizada.", tags = "Hormiguero")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Hormiga creada exitosamente.",
 					content = {
@@ -68,7 +68,7 @@ public class HormigaController {
     }
 
 	
-	@Operation(summary = "Liberar hormigas para ser reutilizadas.")
+	@Operation(summary = "Liberar hormigas para ser reutilizadas.", tags = "Hormiguero")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Libera una lista de hormigas para ser reutilizadas.", content = @Content)			
 	})
@@ -84,7 +84,7 @@ public class HormigaController {
     }
 	
 
-	@Operation(summary = "Sepultar hormigas en el olvido.")
+	@Operation(summary = "Sepultar hormigas en el olvido.", tags = "Hormiguero")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Sepulta una lista de hormigas.", content = @Content)
 	})
@@ -100,7 +100,7 @@ public class HormigaController {
 	}
     
 	
-	@Operation(summary = "Diagnosticar cuántas hormigas han sido creadas.")
+	@Operation(summary = "Diagnosticar cuántas hormigas han sido creadas.", tags = "Diagnóstico")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Reporta todas las hormigas existentes en el hormiguero.",
 					content = {
@@ -116,7 +116,7 @@ public class HormigaController {
     }
     
 	
-	@Operation(summary = "Diagnosticar la integración con el Subsistema de Entorno")
+	@Operation(summary = "Diagnosticar la integración con el Subsistema de Entorno", tags = "Diagnóstico")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Retorna la cantidad de comida requerida para crear una nueva hormiga.", 
 					content = { 
@@ -133,7 +133,7 @@ public class HormigaController {
     }
 	
     
-	@Operation(summary = "Diagnosticar la integración con el Subsistema de Recolección de Comida")
+	@Operation(summary = "Diagnosticar la integración con el Subsistema de Recolección de Comida", tags = "Diagnóstico")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Retorna la cantidad de comida disponible en el Subsistema de Recolección de Comida.", content = @Content),
 			@ApiResponse(responseCode = "500", description = "El Subsistema de Recolección de Comida se encuentra fuera de línea o mal configurado en el Subsistema Reina.", content = @Content)
@@ -152,6 +152,8 @@ public class HormigaController {
     	return new ModelAndView("redirect:/swagger-ui/index.html", model);
     }
     
+    
+    @Operation(summary = "Retorna el endpoint configurado para Recolección de Comida", tags = {"Configuración","Comida"})
     @GetMapping("/config/comida")
     @ApiResponses(value = {
     		@ApiResponse(responseCode = "200", description = "Retorna el endpoint configurado para el Subsistema de Recolección de Comida", content = @Content)
@@ -162,6 +164,8 @@ public class HormigaController {
     	return result;
     }
     
+    
+    @Operation(description = "Reconfigura el endpoint de Recolección de Comida", tags = {"Configuración","Comida"})
     @PostMapping("/config/comida")
     @ApiResponses(value = {
     		@ApiResponse(responseCode = "200", description = "Configura el nuevo endpoint para el Subsistema de Recolección de Comida", content = @Content)
@@ -173,6 +177,7 @@ public class HormigaController {
     }
 
     
+    @Operation(description = "Retorna el endpoint configurado para el Subsistema de Entorno", tags = {"Configuración","Entorno"})
     @GetMapping("/config/entorno")
     @ApiResponses(value = {
     		@ApiResponse(responseCode = "200", description = "Retorna el endpoint configurado para el Subsistema de Entorno", content = @Content)
@@ -183,6 +188,8 @@ public class HormigaController {
     	return result;
     }
     
+    
+    @Operation(description = "Reconfigura el endpoint de Entorno", tags = {"Configuración","Entorno"})
     @PostMapping("/config/entorno")
     @ApiResponses(value = {
     		@ApiResponse(responseCode = "200", description = "Configura el nuevo endpoint para el Subsistema de Entorno", content = @Content)
