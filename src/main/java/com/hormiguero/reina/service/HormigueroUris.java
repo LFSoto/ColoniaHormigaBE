@@ -68,13 +68,19 @@ public class HormigueroUris {
 			this.props.store(os,"");
 			
 			os.flush();
-			os.close();
 			return true;
 		} catch (IOException ex) {
 			return false;
 		} finally {
-			if (os != null) 
-				os = null;
+			if (os != null) {
+				try {
+					os.close();
+				} catch (IOException ex) {
+					
+				} finally {
+					os = null;
+				}
+			}
 		}
 	}
 
