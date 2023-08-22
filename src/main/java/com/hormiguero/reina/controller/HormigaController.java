@@ -21,6 +21,7 @@ import com.hormiguero.exception.EndpointError;
 import com.hormiguero.reina.entity.EntornoEntity;
 import com.hormiguero.reina.entity.HormigaEntity;
 import com.hormiguero.reina.service.ExternalHormigueroService;
+import com.hormiguero.reina.service.HormigueroUris;
 import com.hormiguero.reina.service.ReinaService;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -60,9 +61,9 @@ public class HormigaController {
     @GetMapping("/v1/getHormiga")
     public List<HormigaEntity> getHormiga(@RequestParam int cantidad, @RequestParam String tipo) throws Exception {
 		long id = System.currentTimeMillis();
-		log.info("RequestId: {}. Se han solicitado {} hormigas de tipo {}.", id, cantidad, tipo);
+		log.info("[HORMIGUERO] RequestId: {}. Se han solicitado {} hormigas de tipo {}.", id, cantidad, tipo);
 		List<HormigaEntity> result = reina.getHormigas(cantidad, tipo);
-		log.info("RequestId: {}. Se logró crear {} hormigas de tipo {}.", id, result.size(), tipo);
+		log.info("[HORMIGUERO] RequestId: {}. Se logró crear {} hormigas de tipo {}.", id, result.size(), tipo);
 		return result;
     }
 
@@ -75,10 +76,10 @@ public class HormigaController {
     public void releaseHormigas(@Parameter(description = "Lista de hormigas a liberar") @RequestBody HormigaEntity[] hormigas) {
 		if (hormigas.length > 0) {
 	    	reina.releaseHormigas(hormigas);
-	    	log.info("Se han liberado {} hormigas de tipo {}.", hormigas.length, hormigas[0].getType());
+	    	log.info("[HORMIGUERO] Se han liberado {} hormigas de tipo {}.", hormigas.length, hormigas[0].getType());
 		}
 		else {
-			log.warn("La lista de hormigas a liberar se encuentra vacía.");
+			log.warn("[HORMIGUERO] La lista de hormigas a liberar se encuentra vacía.");
 		}
     }
 	
@@ -91,10 +92,10 @@ public class HormigaController {
     public void killHormigas(@Parameter(description = "Lista de hormigas a sepultar") @RequestBody HormigaEntity[] hormigas) {
 		if (hormigas.length > 0) {
 			reina.killHormigas(hormigas);
-			log.info("Se han sepultado {} hormigas de tipo {}.", hormigas.length, hormigas[0].getType());
+			log.info("[HORMIGUERO] Se han sepultado {} hormigas de tipo {}.", hormigas.length, hormigas[0].getType());
 		}
 		else {
-			log.warn("La lista de hormigas a sepultar se encuentra vacía.");
+			log.warn("[HORMIGUERO] La lista de hormigas a sepultar se encuentra vacía.");
 		}
 	}
     
@@ -149,6 +150,47 @@ public class HormigaController {
     public ModelAndView redirectToSwagger(ModelMap model) {
     	log.info("[DIAGNOSTICO] Se esta redireccionando al Swagger UI");
     	return new ModelAndView("redirect:/swagger-ui/index.html", model);
+    }
+    
+    @GetMapping("/config/comida")
+    @ApiResponses(value = {
+    		@ApiResponse(responseCode = "200", description = "Retorna el endpoint configurado para el Subsistema de Recolección de Comida", content = @Content)
+    })
+    public String getConfigComida() {
+    	String result = HormigueroUris.getInstance().getUrl(HormigueroUris.SubSistemas.COMIDA);
+    	log.info("[CONFIG] Se ha solicitado el endpoint de Recolección de Comida: {}", result);
+    	return result;
+    }
+    
+    @PostMapping("/config/comida")
+    @ApiResponses(value = {
+    		@ApiResponse(responseCode = "200", description = "Configura el nuevo endpoint para el Subsistema de Recolección de Comida", content = @Content)
+    })
+    public boolean putConfigComida(@Parameter(description = "El nuevo endpoint") @RequestBody String url) {
+    	boolean result = HormigueroUris.getInstance().setUrl(HormigueroUris.SubSistemas.COMIDA, url);
+    	log.warn("[CONFIG] El endpoint  de Recolección de Comida ha sido actualizado ( resultado = {} ) a apuntar  {}", result, url);
+    	return result;
+    }
+
+    
+    @GetMapping("/config/entorno")
+    @ApiResponses(value = {
+    		@ApiResponse(responseCode = "200", description = "Retorna el endpoint configurado para el Subsistema de Entorno", content = @Content)
+    })
+    public String getConfigEntorno() {
+    	String result = HormigueroUris.getInstance().getUrl(HormigueroUris.SubSistemas.ENTORNO);
+    	log.info("[CONFIG] Se ha solicitado el endpoint de Entorno: {}", result);
+    	return result;
+    }
+    
+    @PostMapping("/config/entorno")
+    @ApiResponses(value = {
+    		@ApiResponse(responseCode = "200", description = "Configura el nuevo endpoint para el Subsistema de Entorno", content = @Content)
+    })
+    public boolean putConfigEntorno(@Parameter(description = "El nuevo endpoint") @RequestBody String url) {
+    	boolean result = HormigueroUris.getInstance().setUrl(HormigueroUris.SubSistemas.ENTORNO, url);
+    	log.warn("[CONFIG] El endpoint  de Entorno ha sido actualizado ( resultado = {} ) a apuntar  {}", result, url);
+    	return result;
     }
     
     @ExceptionHandler({ Exception.class })

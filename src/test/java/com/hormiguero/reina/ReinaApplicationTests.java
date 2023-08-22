@@ -35,7 +35,7 @@ class ReinaApplicationTests {
 
 	@Autowired
 	private HormigaController instance;	
-	private MockMvc _mock;
+	private MockMvc mock;
 	private ObjectMapper mapper;
 	private List<HormigaEntity> ants;
 	private boolean entornoStatus;
@@ -44,21 +44,21 @@ class ReinaApplicationTests {
 	@BeforeAll
 	void initializeApp() {
 		System.setProperty("spring.data.mongodb.uri", "mongodb+srv://queen:reina2023reina@hormigareina.twxfm7c.mongodb.net/hormiguero?retryWrites=true&w=majority");
-		this._mock = standaloneSetup(instance)
+		this.mock = standaloneSetup(instance)
 				.build();
 		
 		this.entornoStatus = true;
 		this.comidaStatus = true;
 		this.mapper = new ObjectMapper();
 		try {
-			byte[] response = this._mock.perform(get("/v1/listAll"))
+			byte[] response = this.mock.perform(get("/v1/listAll"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn().getResponse().getContentAsByteArray();
 			
 			List<HormigaEntity> found = mapper.readValue(response, new TypeReference<List<HormigaEntity>>() {});
 			if (!found.isEmpty()) {
 
-				this._mock.perform(post("/v1/killHormiga").content(mapper.writeValueAsBytes(found)).header("Content-Type", "application/JSON"))
+				this.mock.perform(post("/v1/killHormiga").content(mapper.writeValueAsBytes(found)).header("Content-Type", "application/JSON"))
 					.andExpect(MockMvcResultMatchers.status().isOk());
 			}
 		} catch (Exception ex) {
@@ -81,7 +81,7 @@ class ReinaApplicationTests {
 	@Order(10)
 	void testFoodCost()  throws Exception {
 		this.entornoStatus = false;
-		this._mock.perform(get("/v1/entorno/foodCost"))
+		this.mock.perform(get("/v1/entorno/foodCost"))
 			.andExpect(MockMvcResultMatchers.status().isOk());
 		this.entornoStatus = true;
 	}
@@ -90,7 +90,7 @@ class ReinaApplicationTests {
 	@Order(20)
 	void testFoodAvailable()  throws Exception {
 		this.comidaStatus = false;
-		this._mock.perform(get("/v1/comida/foodAvailable"))
+		this.mock.perform(get("/v1/comida/foodAvailable"))
 			.andExpect(MockMvcResultMatchers.status().isOk());
 		this.comidaStatus = true;
 	}
@@ -100,7 +100,7 @@ class ReinaApplicationTests {
 	void testNuevaHormiga() throws Exception {
 
 		String url = "/v1/getHormiga?cantidad={0}&tipo=TESTING";
-		String response = this._mock.perform(get(url, 10))
+		String response = this.mock.perform(get(url, 10))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn().getResponse().getContentAsString();
 		Assert.hasLength(response, "La respuesta de " + url + " esta vacía");
@@ -116,7 +116,7 @@ class ReinaApplicationTests {
 	void testNegociarHormiga() throws Exception {
 
 		String url = "/v1/getHormiga?cantidad={0}&tipo=TESTING";
-		String response = this._mock.perform(get(url, 1))
+		String response = this.mock.perform(get(url, 1))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn().getResponse().getContentAsString();
 		Assert.hasLength(response, "La respuesta de " + url + " esta vacía");
@@ -129,7 +129,7 @@ class ReinaApplicationTests {
 	@Test
 	@Order(50)
 	void testListtAll() throws Exception {
-		byte[] response = this._mock.perform(get("/v1/listAll"))
+		byte[] response = this.mock.perform(get("/v1/listAll"))
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andReturn().getResponse().getContentAsByteArray();
 		
@@ -142,7 +142,7 @@ class ReinaApplicationTests {
 	@Order(60)
 	void testReleaseHormiga() throws Exception {
 		
-		this._mock.perform(post("/v1/releaseHormiga").content(mapper.writeValueAsBytes(getAnts())).header("Content-Type", "application/JSON"))
+		this.mock.perform(post("/v1/releaseHormiga").content(mapper.writeValueAsBytes(getAnts())).header("Content-Type", "application/JSON"))
 			.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
@@ -150,7 +150,7 @@ class ReinaApplicationTests {
 	@Order(61)
 	void testReleaseEmpty() throws Exception {
 
-		this._mock.perform(post("/v1/releaseHormiga").content(mapper.writeValueAsBytes(new ArrayList<HormigaEntity>())).header("Content-Type", "application/JSON"))
+		this.mock.perform(post("/v1/releaseHormiga").content(mapper.writeValueAsBytes(new ArrayList<HormigaEntity>())).header("Content-Type", "application/JSON"))
 			.andExpect(MockMvcResultMatchers.status().isOk());	
 	}
 	
@@ -159,7 +159,7 @@ class ReinaApplicationTests {
 	void testReasignacionHormiga() throws Exception {
 		
 		String url = "/v1/getHormiga?cantidad={0}&tipo=TESTING";
-		String response = this._mock.perform(get(url, 5))
+		String response = this.mock.perform(get(url, 5))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn().getResponse().getContentAsString();
 		Assert.hasLength(response, "La respuesta de " + url + " esta vacía");
@@ -171,7 +171,7 @@ class ReinaApplicationTests {
 	@Test
 	@Order(80)
 	void testKillHormiga() throws Exception {
-		this._mock.perform(post("/v1/killHormiga").content(mapper.writeValueAsBytes(getAnts())).header("Content-Type", "application/JSON"))
+		this.mock.perform(post("/v1/killHormiga").content(mapper.writeValueAsBytes(getAnts())).header("Content-Type", "application/JSON"))
 			.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
@@ -179,7 +179,7 @@ class ReinaApplicationTests {
 	@Order(81)
 	void testKillEmpty() throws Exception {
 		
-		this._mock.perform(post("/v1/killHormiga").content(mapper.writeValueAsBytes(new ArrayList<HormigaEntity>())).header("Content-Type", "application/JSON"))
+		this.mock.perform(post("/v1/killHormiga").content(mapper.writeValueAsBytes(new ArrayList<HormigaEntity>())).header("Content-Type", "application/JSON"))
 		.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
@@ -187,8 +187,50 @@ class ReinaApplicationTests {
 	@Test
 	@Order(90)
 	void testSwagger() throws Exception {
-		this._mock.perform(get("/swagger"))
+		this.mock.perform(get("/swagger"))
 			.andExpect(MockMvcResultMatchers.status().isFound());
+	}
+	
+	@Test
+	@Order(100)
+	void testEntornoDown() throws Exception {
+		String currentConfig = HormigueroUris.getInstance().getUrl(HormigueroUris.SubSistemas.ENTORNO);
+		
+		this.mock.perform(get("/config/entorno"))
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(MockMvcResultMatchers.content().string(currentConfig));
+		
+		this.mock.perform(post("/config/entorno").content(mapper.writeValueAsBytes("http://127.0.0.1:38001/dead-road")).header("Content-Type", "application/JSON"))
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(MockMvcResultMatchers.content().string("true"));
+		
+		this.mock.perform(get("/v1/entorno/foodCost"))
+			.andExpect(MockMvcResultMatchers.status().isInternalServerError());
+		
+		this.mock.perform(post("/config/entorno").content(mapper.writeValueAsBytes(currentConfig)).header("Content-Type", "application/JSON"))
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(MockMvcResultMatchers.content().string("true"));
+	}
+	
+	@Test
+	@Order(101)
+	void testComidaDown() throws Exception {
+		String currentConfig = HormigueroUris.getInstance().getUrl(HormigueroUris.SubSistemas.COMIDA);
+		
+		this.mock.perform(get("/config/comida"))
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(MockMvcResultMatchers.content().string(currentConfig));
+		
+		this.mock.perform(post("/config/comida").content(mapper.writeValueAsBytes("http://127.0.0.1:38001/dead-road")).header("Content-Type", "application/JSON"))
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(MockMvcResultMatchers.content().string("true"));
+		
+		this.mock.perform(get("/v1/comida/foodAvailable"))
+			.andExpect(MockMvcResultMatchers.status().isInternalServerError());
+		
+		this.mock.perform(post("/config/comida").content(mapper.writeValueAsBytes(currentConfig)).header("Content-Type", "application/JSON"))
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(MockMvcResultMatchers.content().string("true"));
 	}
 	
 	private List<HormigaEntity> getAnts() {
