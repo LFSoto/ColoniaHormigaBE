@@ -153,7 +153,7 @@ public class HormigaController {
     }
     
     
-    @Operation(summary = "Retorna el endpoint configurado para Recolección de Comida", tags = {"Configuración","Comida"})
+    @Operation(summary = "Retorna el endpoint configurado para Recolección de Comida", tags = "Configuración - Comida")
     @GetMapping("/config/comida")
     @ApiResponses(value = {
     		@ApiResponse(responseCode = "200", description = "Retorna el endpoint configurado para el Subsistema de Recolección de Comida", content = @Content)
@@ -165,19 +165,19 @@ public class HormigaController {
     }
     
     
-    @Operation(description = "Reconfigura el endpoint de Recolección de Comida", tags = {"Configuración","Comida"})
+    @Operation(summary = "Reconfigura el endpoint de Recolección de Comida", tags = "Configuración - Comida")
     @PostMapping("/config/comida")
     @ApiResponses(value = {
     		@ApiResponse(responseCode = "200", description = "Configura el nuevo endpoint para el Subsistema de Recolección de Comida", content = @Content)
     })
     public boolean putConfigComida(@Parameter(description = "El nuevo endpoint") @RequestBody String url) {
     	boolean result = HormigueroUris.getInstance().setUrl(HormigueroUris.SubSistemas.COMIDA, url);
-    	log.warn("[CONFIG] El endpoint  de Recolección de Comida ha sido actualizado ( resultado = {} ) a apuntar  {}", result, url);
+    	log.warn("[CONFIG] El endpoint de Recolección de Comida ha sido actualizado ( resultado = {} ) a apuntar  {}", result, url);
     	return result;
     }
 
     
-    @Operation(description = "Retorna el endpoint configurado para el Subsistema de Entorno", tags = {"Configuración","Entorno"})
+    @Operation(summary = "Retorna el endpoint configurado para el Subsistema de Entorno", tags = "Configuración - Entorno")
     @GetMapping("/config/entorno")
     @ApiResponses(value = {
     		@ApiResponse(responseCode = "200", description = "Retorna el endpoint configurado para el Subsistema de Entorno", content = @Content)
@@ -189,14 +189,14 @@ public class HormigaController {
     }
     
     
-    @Operation(description = "Reconfigura el endpoint de Entorno", tags = {"Configuración","Entorno"})
+    @Operation(summary = "Reconfigura el endpoint de Entorno", tags = "Configuración - Entorno")
     @PostMapping("/config/entorno")
     @ApiResponses(value = {
     		@ApiResponse(responseCode = "200", description = "Configura el nuevo endpoint para el Subsistema de Entorno", content = @Content)
     })
     public boolean putConfigEntorno(@Parameter(description = "El nuevo endpoint") @RequestBody String url) {
     	boolean result = HormigueroUris.getInstance().setUrl(HormigueroUris.SubSistemas.ENTORNO, url);
-    	log.warn("[CONFIG] El endpoint  de Entorno ha sido actualizado ( resultado = {} ) a apuntar  {}", result, url);
+    	log.warn("[CONFIG] El endpoint de Entorno ha sido actualizado ( resultado = {} ) a apuntar  {}", result, url);
     	return result;
     }
     
