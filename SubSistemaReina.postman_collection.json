@@ -1,0 +1,234 @@
+{
+	"info": {
+		"_postman_id": "f14c884c-7fc3-4d64-b613-f0265b1c22b2",
+		"name": "SubSistemaReina",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11389168"
+	},
+	"item": [
+		{
+			"name": "[Hormiguero] LiberarHormigas",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n  {\r\n    \"id\": 0,\r\n    \"type\": \"string\",\r\n    \"birthday\": \"2023-08-22T03:28:17.276Z\"\r\n  }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{env}}/v1/releaseHormiga",
+					"host": [
+						"{{env}}"
+					],
+					"path": [
+						"v1",
+						"releaseHormiga"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Hormiguero] MatarHormiga",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n  {\r\n    \"id\": 0,\r\n    \"type\": \"string\",\r\n    \"birthday\": \"2023-08-22T03:32:09.797Z\"\r\n  }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{env}}/v1/killHormiga",
+					"host": [
+						"{{env}}"
+					],
+					"path": [
+						"v1",
+						"killHormiga"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Hormiguero] ObtenerHormiga",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{env}}/v1/getHormiga",
+					"host": [
+						"{{env}}"
+					],
+					"path": [
+						"v1",
+						"getHormiga"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Entorno] ObtenerEndpoint",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{env}}/config/entorno",
+					"host": [
+						"{{env}}"
+					],
+					"path": [
+						"config",
+						"entorno"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Entorno] ReconfigurarEndpoint",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\"http://ec2-52-200-81-149.compute-1.amazonaws.com/api/environment/ant-cost\"",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{env}}/config/entorno",
+					"host": [
+						"{{env}}"
+					],
+					"path": [
+						"config",
+						"entorno"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Comida] ObtenerEndpoint",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{env}}/config/comida",
+					"host": [
+						"{{env}}"
+					],
+					"path": [
+						"config",
+						"comida"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Comida] ReconfigurarEndpoint",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\"http://54.163.208.78/foodStorage\""
+				},
+				"url": {
+					"raw": "{{env}}/config/comida",
+					"host": [
+						"{{env}}"
+					],
+					"path": [
+						"config",
+						"comida"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Diagnostico] VerDiagnostico",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{env}}/v1/listAll",
+					"host": [
+						"{{env}}"
+					],
+					"path": [
+						"v1",
+						"listAll"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Diagnostico] VerDiagnosticoEntorno",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{env}}/v1/listAll",
+					"host": [
+						"{{env}}"
+					],
+					"path": [
+						"v1",
+						"listAll"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Diagnostico] VerDiagnosticoRecoleccionComida",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{env}}/v1/comida/foodAvailable",
+					"host": [
+						"{{env}}"
+					],
+					"path": [
+						"v1",
+						"comida",
+						"foodAvailable"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
