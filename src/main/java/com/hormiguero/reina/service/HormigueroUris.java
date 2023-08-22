@@ -61,13 +61,20 @@ public class HormigueroUris {
 	
 	public boolean setUrl(SubSistemas sistema, String newUrl) {
 		this.props.setProperty(getPropertyKeyName(sistema), newUrl);
+		java.io.OutputStream os = null;
 		try {
 			URL uri = Thread.currentThread().getContextClassLoader().getResource("application.properties");
-			java.io.OutputStream os = new java.io.FileOutputStream(uri.getPath());
+			os = new java.io.FileOutputStream(uri.getPath());
 			this.props.store(os,"");
+			
+			os.flush();
+			os.close();
 			return true;
 		} catch (IOException ex) {
 			return false;
+		} finally {
+			if (os != null) 
+				os = null;
 		}
 	}
 
