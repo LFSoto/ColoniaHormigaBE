@@ -47,14 +47,14 @@ public class ExternalHormigueroService {
 		setUrl(HormigueroUris.getInstance().getUrl(HormigueroUris.SubSistemas.COMIDA));
 		int result = 0;
 		if (entornoEndpoint.startsWith("http")) {
-			result = Integer.parseInt(this.endpoint.getForObject(entornoEndpoint, String.class));
+			result = Integer.parseInt(this.endpoint.getForObject(entornoEndpoint + "getTotalFood", String.class));
 		}
 		return result;
 	}
 
 	public void getFood(int food)  {
 		if (food <= 0) return;
-		setUrl(HormigueroUris.getInstance().getUrl(HormigueroUris.SubSistemas.COMIDA) + "?food=" + food);
+		setUrl(HormigueroUris.getInstance().getUrl(HormigueroUris.SubSistemas.COMIDA) + "requestFoodForAnts?food=" + food);
 		if (entornoEndpoint.startsWith("http")) {
 			try {
 				this.endpoint.put(entornoEndpoint, food);
